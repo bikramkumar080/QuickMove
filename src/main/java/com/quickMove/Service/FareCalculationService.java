@@ -1,4 +1,4 @@
-package com.quickMove.Service;
+package com.quickMove.service;
 
 import org.springframework.stereotype.Service;
 
