@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        header {
+            background: url('https://images.unsplash.com/photo-1593642532973-d31b6557fa68') no-repeat center center/cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        header h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        header p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .cta-btn {
+            padding: 15px 40px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .cta-btn:hover {
+            background-color: #218838;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .services {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 50px 0;
+            padding: 0 20px;
+        }
+        .service-card {
+            background-color: white;
+            width: 280px;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .service-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .service-card p {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .service-card .btn {
+            padding: 10px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .service-card .btn:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to QuickMove</h1>
+        <p>Book a ride in minutes. Fast, reliable, and safe travel at your fingertips.</p>
+        <button class="cta-btn">Get Started</button>
+    </header>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="service-card">
+            <h3>Ride Anytime</h3>
+            <p>Instant booking. Available 24/7. Wherever you are, we’re just a tap away.</p>
+            <button class="btn">Book a Ride</button>
+        </div>
+        <div class="service-card">
+            <h3>Safe & Secure</h3>
+            <p>We ensure your safety with trusted drivers and secure payments for peace of mind.</p>
+            <button class="btn">Learn More</button>
+        </div>
+        <div class="service-card">
+            <h3>Affordable Prices</h3>
+            <p>Get the best value for your money with transparent pricing and no hidden fees.</p>
+            <button class="btn">View Pricing</button>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Cab Booking App. All rights reserved.</p>
+    </footer>
+</body>
+</html>
