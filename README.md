@@ -1,5 +1,5 @@
 # Ride-Sharing
-Project Outline: On-Demand Ride-Sharing Platform
+Project Outline: On-Demand Ride Platform
 
 # Core Features
 
