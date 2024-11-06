@@ -1,9 +1,9 @@
-package com.quickMove.Controllers;
+package com.quickMove.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.quickMove.Service.FareCalculationService;
+import com.quickMove.service.FareCalculationService;
 
 @RestController
 @RequestMapping("/api/fare")
