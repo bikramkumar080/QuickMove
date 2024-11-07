@@ -1,7 +1,7 @@
 package com.quickMove.controller;
 
 import com.quickMove.Service.UserService;
-import com.quickMove.model.Ride;
+import com.quickMove.dto.RideDTO;
 import com.quickMove.Service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class RideController {
     private UserService userService;
 
     @GetMapping("/history")
-    public ResponseEntity<List<Ride>> getRideHistory(@RequestParam Long userId) {
+    public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId) {
         String role = userService.getUserRole(userId);
-        List<Ride> history = null;
+        List<RideDTO> history = null;
 
         if ("PASSENGER".equalsIgnoreCase(role)) {
             history = rideService.getRideHistoryByPassenger(userId);
@@ -39,10 +39,9 @@ public class RideController {
     @PostMapping("/cancel")
     public ResponseEntity<String> cancelRide(
             @RequestParam Long rideId,
-            @RequestParam String reason,
-            @RequestParam Long userId) {
+            @RequestParam String reason) {
 
-        boolean isCancelled = rideService.cancelRide(rideId, reason, userId);
+        boolean isCancelled = rideService.cancelRide(rideId, reason);
         if (isCancelled) {
             return ResponseEntity.ok("Ride cancelled successfully");
         } else {
