@@ -28,6 +28,7 @@ public class RideService {
         if (ride.isPresent() && ride.get().getRideStatus() != Ride.RideStatus.CANCELLED && ride.get().getRideStatus() != Ride.RideStatus.COMPLETED && (Objects.equals(ride.get().getPassenger().getId(), userId) || Objects.equals(ride.get().getDriver().getId(), userId))) {
             Ride r = ride.get();
             r.setRideStatus(Ride.RideStatus.CANCELLED);
+            r.setCancellationReason(reason);
             rideRepository.save(r);
             return true;
         }

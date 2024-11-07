@@ -31,6 +31,8 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private RideStatus rideStatus;
 
+    private String cancellationReason;
+
     // Getters and setters
 
     public enum RideStatus {
