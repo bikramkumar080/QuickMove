@@ -20,7 +20,7 @@ public class RideController {
     private UserService userService;
 
     @GetMapping("/history")
-    public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId) {
+    public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId) {  //TODO check if userID has authorization to view the history
         String role = userService.getUserRole(userId);
         List<RideDTO> history = null;
 
@@ -37,7 +37,7 @@ public class RideController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<String> cancelRide(
+    public ResponseEntity<String> cancelRide( //TODO check if the user has authorization to cancel the ride
             @RequestParam Long rideId,
             @RequestParam String reason) {
 
