@@ -1,8 +1,9 @@
 package com.quickMove.controller;
 
-import com.quickMove.Service.UserService;
+import com.quickMove.model.Ride;
+import com.quickMove.service.UserService;
 import com.quickMove.dto.RideDTO;
-import com.quickMove.Service.RideService;
+import com.quickMove.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class RideController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<String> cancelRide( //TODO check if the user has authorization to cancel the ride
+    public ResponseEntity<String> cancelRide(
             @RequestParam Long rideId,
             @RequestParam String reason) {
 
@@ -48,4 +49,25 @@ public class RideController {
             return ResponseEntity.status(400).body("Ride cancellation failed or not authorized");
         }
     }
+    @GetMapping("/check/request")
+    public ResponseEntity<List<RideDTO>> getAllRides() {
+        List<RideDTO> rides = rideService.checkRideRequest();
+        return ResponseEntity.ok(rides);
+    }
+
+    @PostMapping("/accept")
+    public ResponseEntity<RideDTO> acceptRequest(@RequestHeader("Authorization") String header,
+            @RequestParam Long requestId) {
+        RideDTO updatedRide = rideService.acceptRideRequest(header,requestId);
+        return ResponseEntity.ok(updatedRide);
+    }
+
+    @PostMapping("/complete")
+    public ResponseEntity<RideDTO> completeRide(@RequestHeader("Authorization") String header,
+            @RequestParam Long rideId) {
+        RideDTO updatedRide = rideService.completeRide(header,rideId);
+        return ResponseEntity.ok(updatedRide);
+    }
+
+
 }
