@@ -1,4 +1,4 @@
-# Ride-Sharing
+# Quick-Move
 Project Outline: On-Demand Ride Platform
 
 # Core Features
