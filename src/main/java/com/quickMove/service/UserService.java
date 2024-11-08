@@ -1,4 +1,4 @@
-package com.quickMove.Service;
+package com.quickMove.service;
 
 import com.quickMove.model.User;
 import com.quickMove.repository.UserRepository;
