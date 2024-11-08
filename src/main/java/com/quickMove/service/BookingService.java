@@ -34,7 +34,7 @@ public class BookingService {
 
     private final String DISTANCE_MATRIX_URL = "https://maps.googleapis.com/maps/api/distancematrix/json";
 
-    public Ride getDistanceAndTime(String pickupLocation, String dropLocation,String header) {
+    public Ride bookRide(String pickupLocation, String dropLocation,String header) {
 
         // Build the Google Maps API URL
         String url = String.format("%s?origins=%s&destinations=%s&key=%s",
@@ -44,36 +44,36 @@ public class BookingService {
                 apiKey);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-//        String responseBody = "{\n" +
-//                "   \"destination_addresses\" : [\n" +
-//                "      \"Los Angeles, CA, USA\"\n" +
-//                "   ],\n" +
-//                "   \"origin_addresses\" : [\n" +
-//                "      \"New York, NY, USA\"\n" +
-//                "   ],\n" +
-//                "   \"rows\" : [\n" +
-//                "      {\n" +
-//                "         \"elements\" : [\n" +
-//                "            {\n" +
-//                "               \"distance\" : {\n" +
-//                "                  \"text\" : \"2,451 mi\",\n" +
-//                "                  \"value\" : 3945032\n" +
-//                "               },\n" +
-//                "               \"duration\" : {\n" +
-//                "                  \"text\" : \"1 day 14 hours\",\n" +
-//                "                  \"value\" : 137440\n" +
-//                "               },\n" +
-//                "               \"status\" : \"OK\"\n" +
-//                "            }\n" +
-//                "         ]\n" +
-//                "      }\n" +
-//                "   ],\n" +
-//                "   \"status\" : \"OK\"\n" +
-//                "}";
+        String responseBody = "{\n" +
+                "   \"destination_addresses\" : [\n" +
+                "      \"Los Angeles, CA, USA\"\n" +
+                "   ],\n" +
+                "   \"origin_addresses\" : [\n" +
+                "      \"New York, NY, USA\"\n" +
+                "   ],\n" +
+                "   \"rows\" : [\n" +
+                "      {\n" +
+                "         \"elements\" : [\n" +
+                "            {\n" +
+                "               \"distance\" : {\n" +
+                "                  \"text\" : \"2,451 mi\",\n" +
+                "                  \"value\" : 3945032\n" +
+                "               },\n" +
+                "               \"duration\" : {\n" +
+                "                  \"text\" : \"1 day 14 hours\",\n" +
+                "                  \"value\" : 137440\n" +
+                "               },\n" +
+                "               \"status\" : \"OK\"\n" +
+                "            }\n" +
+                "         ]\n" +
+                "      }\n" +
+                "   ],\n" +
+                "   \"status\" : \"OK\"\n" +
+                "}";
 
-        Map<String, String> responseOutcome=parseDistanceMatrixResponse(response.getBody());
+//        Map<String, String> responseOutcome=parseDistanceMatrixResponse(response.getBody());
 
-//        Map<String, String> responseOutcome= parseDistanceMatrixResponse(responseBody);
+        Map<String, String> responseOutcome= parseDistanceMatrixResponse(responseBody);
         Ride ride =new Ride();
         if (responseOutcome.get("distance")!=null && responseOutcome.get("duration")!=null){
 
@@ -90,6 +90,7 @@ public class BookingService {
             ride.setStartTime(null);
             ride.setEndTime(null);
             ride.setPrice(100);
+            ride.setStatus(Ride.Status.UNASSIGNED);
             ride.setRideStatus(Ride.RideStatus.PENDING);
             ride.setCancellationReason(null);
 

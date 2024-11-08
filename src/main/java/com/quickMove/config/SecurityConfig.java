@@ -2,6 +2,7 @@ package com.quickMove.config;
 
 
 import com.quickMove.service.UserServices;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,13 +34,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("register/**","login","history","/error").permitAll()
-                                                         .requestMatchers("api/getData/**","/book/ride").hasAuthority(
-                                                                 "ROLE_passenger")
-                                                         .requestMatchers("/ride/**").hasAuthority("ROLE_driver").
+                .authorizeHttpRequests(request -> request.requestMatchers("/api/users/**","history","/api/users/login").permitAll()
+                                                         .requestMatchers("api/rides/history","api/rides/cancel").hasAnyAuthority(
+                                                                 "ROLE_passenger","ROLE_driver")
+                                                         .requestMatchers("api/rides/check","api/rides/accept",
+                                                                 "api/rides/complete").hasAuthority(
+                                                                 "ROLE_driver")
+                                                         .requestMatchers("/api/rides/book").hasAuthority(
+                        "ROLE_passenger").
                                                                  anyRequest().authenticated()).sessionManagement(manager ->manager.sessionCreationPolicy(
                             SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider()).addFilterBefore(
-                                    jwtFilterService, UsernamePasswordAuthenticationFilter.class);
+                                    jwtFilterService, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandlingConfigurer -> {
+                    exceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"message\":\"You are not authenticated to perform this action\"}");
+                    });
+                    exceptionHandlingConfigurer.accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"message\":\"You are not authorized to perform this action\"}");
+                    });
+                });
 
                             return httpSecurity.build();
     }
