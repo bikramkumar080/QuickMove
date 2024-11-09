@@ -91,7 +91,6 @@ public class BookingService {
             ride.setEndTime(null);
             ride.setPrice(100);
             ride.setStatus(Ride.Status.UNASSIGNED);
-            ride.setRideStatus(Ride.RideStatus.PENDING);
             ride.setCancellationReason(null);
 
             return rideRepository.save(ride);

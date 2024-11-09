@@ -30,7 +30,7 @@ public class RideService {
     private JWTService jwtService;
 
     public List<RideDTO> getRideHistoryByPassenger(Long passengerId) {
-        List<Ride> rides = rideRepository.findByPassengerIdAndRideStatusIn(
+        List<Ride> rides = rideRepository.findByPassengerIdAndStatusIn(
                 passengerId,
                 Arrays.asList("COMPLETED", "CANCELLED")
         );
@@ -40,7 +40,7 @@ public class RideService {
     }
 
     public List<RideDTO> getRideHistoryByDriver(Long driverId) {
-        List<Ride> rides = rideRepository.findByDriverIdAndRideStatusIn(
+        List<Ride> rides = rideRepository.findByDriverIdAndStatusIn(
                 driverId,
                 Arrays.asList("COMPLETED", "CANCELLED")
         );
@@ -53,9 +53,8 @@ public class RideService {
 
     public boolean cancelRide(Long rideId, String reason) {
         Optional<Ride> ride = rideRepository.findById(rideId);
-        if (ride.isPresent() && ride.get().getRideStatus() != Ride.RideStatus.CANCELLED && ride.get().getRideStatus() != Ride.RideStatus.COMPLETED) {
+        if (ride.isPresent() && ride.get().getStatus() != Ride.Status.CANCELLED && ride.get().getStatus() != Ride.Status.COMPLETED) {
             Ride r = ride.get();
-            r.setRideStatus(Ride.RideStatus.CANCELLED);
             r.setStatus(Ride.Status.CANCELLED);
             r.setCancellationReason(reason);
             rideRepository.save(r);
@@ -73,7 +72,6 @@ public class RideService {
         rideDTO.setEndTime(ride.getEndTime());
         rideDTO.setStatus(ride.getStatus().name());
         rideDTO.setPrice(rideDTO.getPrice());
-        rideDTO.setRideStatus(ride.getRideStatus().name());
         if (ride.getDriver() != null) {
             rideDTO.setDriverId(ride.getDriver().getId());
         }
@@ -95,7 +93,7 @@ public class RideService {
     }
 
     public List<RideDTO> checkRideRequest() {
-        List<Ride> rides = rideRepository.findByRideStatus(Ride.RideStatus.PENDING);
+        List<Ride> rides = rideRepository.findByStatus(Ride.Status.UNASSIGNED);
         return rides.stream().map(this::convertToRideDTO).collect(Collectors.toList());
     }
 
@@ -109,7 +107,6 @@ public class RideService {
                                         .orElseThrow(() -> new RuntimeException("Passenger not found"));
             ride.setDriver(driver);
             ride.setStatus(Ride.Status.ASSIGNED);
-            ride.setRideStatus(Ride.RideStatus.ONGOING);
             ride.setStartTime(LocalDateTime.now());
             ride = rideRepository.save(ride);
             return convertToRideDTO(ride);
@@ -124,10 +121,9 @@ public class RideService {
         String userName = jwtService.extractUserName(header.substring(7));
         User user=userRepository.findByName(userName);
         if(Objects.equals(user.getRole(), "driver")) {
-            if (ride.getRideStatus()!= Ride.RideStatus.COMPLETED) {
+            if (ride.getStatus()!= Ride.Status.COMPLETED) {
                 ride.setEndTime(LocalDateTime.now());
                 ride.setStatus(Ride.Status.COMPLETED);
-                ride.setRideStatus(Ride.RideStatus.COMPLETED);
                 ride = rideRepository.save(ride);
                 return convertToRideDTO(ride);
             }
@@ -136,5 +132,47 @@ public class RideService {
             }
         }
         else {throw new RuntimeException("You are not authorized to perform this action"); }
+    }
+
+    public List<RideDTO> listFilteredRides(Ride.Status status, Long driverId, Long passengerId) {
+        List<Ride> rides = rideRepository.findAll().stream()
+                .filter(ride -> (status == null || ride.getStatus() == status))
+                .filter(ride -> (driverId == null || (ride.getDriver() != null && ride.getDriver().getId().equals(driverId))))
+                .filter(ride -> (passengerId == null || ride.getPassenger().getId().equals(passengerId)))
+                .collect(Collectors.toList());
+
+        return rides.stream().map(this::convertToRideDTO).collect(Collectors.toList());
+    }
+
+    public RideDTO saveRide(Ride ride) {
+        Ride savedRide = rideRepository.save(ride);
+        return convertToRideDTO(savedRide);
+    }
+
+    public Optional<RideDTO> findRideById(Long id) {
+        return rideRepository.findById(id).map(this::convertToRideDTO);
+    }
+
+    public Optional<RideDTO> updateRide(Long id, Ride rideDetails) {
+        return rideRepository.findById(id).map(ride -> {
+            ride.setStatus(rideDetails.getStatus());
+            ride.setDriver(rideDetails.getDriver());
+            ride.setPassenger(rideDetails.getPassenger());
+            ride.setStartLocation(rideDetails.getStartLocation());
+            ride.setEndLocation(rideDetails.getEndLocation());
+            ride.setStartTime(rideDetails.getStartTime());
+            ride.setEndTime(rideDetails.getEndTime());
+            ride.setCancellationReason(rideDetails.getCancellationReason());
+            Ride updatedRide = rideRepository.save(ride);
+            return convertToRideDTO(updatedRide);
+        });
+    }
+
+    public boolean deleteRide(Long id) {
+        if (rideRepository.existsById(id)) {
+            rideRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

@@ -1,0 +1,634 @@
+{
+	"info": {
+		"_postman_id": "13863e1e-0d86-41c5-bb65-fb628a998ba8",
+		"name": "QuickMoveServiceAPI",
+		"description": "QuickMove offers seamless registration, booking, and ride management for both passengers and drivers. Users can quickly book rides, track their journey history, and cancel or complete rides as needed, all within a user-friendly platform. Built with robust API endpoints and secure authentication, QuickMove ensures efficient matching of drivers and passengers for a smooth, hassle-free ride experience",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code == 200){",
+									"    pm.environment.set(\"accessToken\",pm.response.text());",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jaggu_Admin\",\n    \"password\": \"Jaggu@admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/users/login",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETED\",\n    \"driver\": {\n        \"id\": 6,\n        \"email\": \"driver@email.com\"\n    },\n    \"passenger\": {\n        \"id\": 10,\n        \"email\": \"passenger@email.com\"\n    },\n    \"startLocation\": \"Location A\",\n    \"endLocation\": \"Location B\",\n    \"startTime\": null,\n    \"endTime\": null,\n    \"cancellationReason\": null,\n    \"price\": 100\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/ride",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"ride"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rides",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/rides",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"rides"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "",
+									"description": "Ride status",
+									"disabled": true
+								},
+								{
+									"key": "driverId",
+									"value": "",
+									"description": "Driver ID",
+									"disabled": true
+								},
+								{
+									"key": "passengerId",
+									"value": "",
+									"description": "Passenger ID",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ride By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/ride/21",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"ride",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ride",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"CANCELLED\",\n    \"driver\": {\n        \"id\": 6,\n        \"email\": \"driver@email.com\"\n    },\n    \"passenger\": {\n        \"id\": 10,\n        \"email\": \"passenger@email.com\"\n    },\n    \"startLocation\": \"Location A\",\n    \"endLocation\": \"Location B\",\n    \"startTime\": null,\n    \"endTime\": null,\n    \"cancellationReason\": \"Waiting time too high\",\n    \"price\": 100\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/ride/21",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"ride",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ride",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/ride/22",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"ride",
+								"22"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\", \n    \"email\": \"john.doe@example.com\", \n    \"phone\": \"1234567890\", \n    \"role\": \"driver\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/user",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/users",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/user/15",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"user",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Doe\", \n    \"email\": \"jane.doe@example.com\", \n    \"phone\": \"0987654321\", \n    \"role\": \"passanger\", \n    \"password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/user/15",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"user",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/user/15",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"user",
+								"15"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "RegisterUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"email\": \"jagannath.admin@example.com\",\n    \"name\": \"Jaggu_Admin\",\n    \"password\": \"Jaggu@admin\",\n     \"phone\": \"000111\",\n    \"role\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/api/users/register",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserLogin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code == 200){",
+							"    pm.environment.set(\"accessToken\",pm.response.text());",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Jaggu\",\n    \"password\": \"Jaggu@1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/api/users/login",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetRideHistory",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/history?userId=5",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"history"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BookRide",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/book?pickupLocation=Bangalore Whitefield&dropLocation=Bangalore Electronic City",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"book"
+					],
+					"query": [
+						{
+							"key": "pickupLocation",
+							"value": "Bangalore Whitefield"
+						},
+						{
+							"key": "dropLocation",
+							"value": "Bangalore Electronic City"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CancelRide",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIiwiaWF0IjoxNzMxMDY5ODc1LCJleHAiOjE3MzEwNzM0NzV9.AAdwXNnvgQDms1uLyoAUqU-ls27e8FV2pdtVC0N47w8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/cancel?rideId=3&reason=Wrong Address selected",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"cancel"
+					],
+					"query": [
+						{
+							"key": "rideId",
+							"value": "3"
+						},
+						{
+							"key": "reason",
+							"value": "Wrong Address selected"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CheckRideRequests",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3MDEzMSwiZXhwIjoxNzMxMDczNzMxfQ.PeFFXwQA4S5QTkszqGm1XSp6Wm6QtkaWYoSX5xE8fIY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/check",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AcceptRideRequest",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3NTg4NSwiZXhwIjoxNzMxMDc5NDg1fQ.KsDqd8FgIFKSeblZ7IebIB7UjmT6Q8D2ze4dm_CW1Do",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/accept?requestId=5",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"accept"
+					],
+					"query": [
+						{
+							"key": "requestId",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CompleteRide",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3NTg4NSwiZXhwIjoxNzMxMDc5NDg1fQ.KsDqd8FgIFKSeblZ7IebIB7UjmT6Q8D2ze4dm_CW1Do",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/api/rides/complete?rideId=5",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"rides",
+						"complete"
+					],
+					"query": [
+						{
+							"key": "rideId",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

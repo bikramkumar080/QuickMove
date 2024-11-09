@@ -42,6 +42,7 @@ public class SecurityConfig {
                                                                  "ROLE_driver")
                                                          .requestMatchers("/api/rides/book").hasAuthority(
                         "ROLE_passenger").
+                        requestMatchers("/api/admin/**").hasAuthority("ROLE_admin").
                                                                  anyRequest().authenticated()).sessionManagement(manager ->manager.sessionCreationPolicy(
                             SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider()).addFilterBefore(
                                     jwtFilterService, UsernamePasswordAuthenticationFilter.class)
