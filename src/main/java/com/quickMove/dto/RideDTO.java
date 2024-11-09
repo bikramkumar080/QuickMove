@@ -16,7 +16,6 @@ public class RideDTO {
     private String endLocation;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String rideStatus;
     private String status;
     private Integer price;
 
@@ -86,14 +85,6 @@ public class RideDTO {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public String getRideStatus() {
-        return rideStatus;
-    }
-
-    public void setRideStatus(String rideStatus) {
-        this.rideStatus = rideStatus;
     }
 
     public void setStatus(String status) {

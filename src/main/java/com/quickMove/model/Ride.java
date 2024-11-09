@@ -47,20 +47,11 @@ public class Ride {
     }
 
     private LocalDateTime endTime;
-    
-    @Enumerated(EnumType.STRING)
-    private RideStatus rideStatus;
 
     private String cancellationReason;
 
     // Getters and setters
 
-    public enum RideStatus {
-        PENDING,
-        ONGOING,
-        COMPLETED,
-        CANCELLED
-    }
     public enum Status {
         ASSIGNED,
         CANCELLED,
@@ -124,14 +115,6 @@ public class Ride {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public RideStatus getRideStatus() {
-        return rideStatus;
-    }
-
-    public void setRideStatus(RideStatus rideStatus) {
-        this.rideStatus = rideStatus;
     }
 
     public String getCancellationReason() {
