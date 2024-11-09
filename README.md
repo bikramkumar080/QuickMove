@@ -1,6 +1,95 @@
 # Quick-Move
 Project Outline: On-Demand Ride Platform
 
+# Stakeholders | Goals
+**1. Passenger**
+
+- Allow new passengers to create an account on the platform.
+
+- Enable registered passengers to securely access their account.
+
+- Ensure passengers can end their session securely.
+
+- Facilitate ride requests by allowing passengers to book rides in real-time.
+
+- Provide passengers with access to their past ride details.
+
+- Allow passengers to cancel a scheduled ride before it starts.
+
+**2. Driver**
+
+- Enable drivers to create an account, setting up their profile and vehicle information.
+
+- Allow registered drivers to securely access their accounts.
+
+- Provide drivers with a list of available ride requests in their area.
+
+- Allow drivers to accept a specific ride request.
+
+- Enable drivers to initiate a ride after reaching the passenger's location.
+
+- Allow drivers to mark a ride as complete once it’s finished.
+
+- Enable drivers to cancel an accepted ride with an appropriate reason.
+
+- Give drivers access to a list of their completed rides and their details.
+
+**3. Admin**
+
+- Provide admins with an overview of all rides on the platform.
+
+- Allow admins to view specific ride details as needed.
+
+- Enable admins to see a list of all users (both passengers and drivers).
+
+- Allow admins to access details about a specific user, either a passenger or driver.
+
+
+# Endpoints to fulfill above goals:
+
+**1. Passenger Goals**
+
+Register API: _/api/users/register_
+
+Login API: _/api/users/login_
+
+Logout API: _/api/users/logout_
+
+Request Ride API: _/api/rides/book_
+
+Ride History API: _/api/rides/history_
+
+Cancel Ride API: _/api/rides/cancel_
+
+**2. Driver Goals**
+
+Register API: _Merged with other stakeholder_
+
+Login API: _Merged with other stakeholder_
+
+List Ride Requests API: _/api/rides/check_
+
+Select Booking API: _/api/rides/accept_
+
+Start Ride API: _/api/rides/start_
+
+Complete Ride API: _/api/rides/complete_
+
+Cancel Ride API: _Merged with other stakeholder_
+
+Ride History API: _/api/rides/history_
+
+**3. Admin Goals**
+
+CRUD operations on ride table: _/rides_
+
+CRUD operations on user table: _/users_
+
+List out cancel rides: _/api/admin/rides/cancel_
+
+Apply penalties: _/api/admin/penalties_
+
+
 # Core Features
 
 **1. User and Driver Registration/Login:** Basic authentication and role differentiation.
