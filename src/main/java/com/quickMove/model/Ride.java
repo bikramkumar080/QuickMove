@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Ride {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,9 +17,25 @@ public class Ride {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = true)
     private User driver; // Assuming the driver is a User
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "passenger_id", nullable = false)
     private User passenger; // Assuming the passenger is a User
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    private Double startLocationLatitude;
+
+    private Double startLocationLongitude;
+
+    private Double endLocationLatitude;
+
+    private Double endLocationLongitude;
+
+    private LocalDateTime startTime;
+
+    private Integer price;
 
     public Integer getPrice() {
         return price;
@@ -29,14 +44,6 @@ public class Ride {
     public void setPrice(Integer price) {
         this.price = price;
     }
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    private String startLocation;
-    private String endLocation;
-    private LocalDateTime startTime;
-
-    private Integer price;
 
     public Status getStatus() {
         return status;
@@ -53,11 +60,12 @@ public class Ride {
     // Getters and setters
 
     public enum Status {
+        OFFERED,
+        UNASSIGNED,
         ASSIGNED,
-        CANCELLED,
-        COMPLETED,
         ONGOING,
-        UNASSIGNED
+        CANCELLED,
+        COMPLETED
     }
 
 
@@ -83,22 +91,6 @@ public class Ride {
 
     public void setPassenger(User passenger) {
         this.passenger = passenger;
-    }
-
-    public String getStartLocation() {
-        return startLocation;
-    }
-
-    public void setStartLocation(String startLocation) {
-        this.startLocation = startLocation;
-    }
-
-    public String getEndLocation() {
-        return endLocation;
-    }
-
-    public void setEndLocation(String endLocation) {
-        this.endLocation = endLocation;
     }
 
     public LocalDateTime getStartTime() {

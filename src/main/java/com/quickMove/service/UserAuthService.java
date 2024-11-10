@@ -4,6 +4,7 @@ import com.quickMove.model.User;
 import com.quickMove.repository.UserRepository;
 import com.quickMove.service.Impl.JWTServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -42,6 +43,9 @@ public class UserAuthService {
         }
         if (repository.existsByPhone(request.getPhone())) {
             throw new ConflictException("A user with this phone number already exists.");
+        }
+        if(request.getRole().equals("admin")){
+            throw new AccessDeniedException("You are not authorized to perform this action");
         }
         user.setId(request.getId());
         user.setName(request.getName());

@@ -1,6 +1,11 @@
 package com.quickMove.model;
 
+import com.quickMove.model.ennumeration.VehicleType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,35 +13,17 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
-
-    // Getters and setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
     private String email;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getRole() {
-        return role;
-    }
 
     private String name;
 
@@ -45,26 +32,21 @@ public class User implements UserDetails {
     private String phone;
 
     private String role;
+    @Column(unique = false, nullable = true)
+    private String licenseNumber;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleType;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String vehicleNumber;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String vehicleModel;
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    private String vehicleColor;
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    private Double latitude;
+
+    private Double longitude;
 
     // Override UserDetails methods:
 
@@ -103,8 +85,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

@@ -66,8 +66,10 @@ public class RideService {
     private RideDTO convertToRideDTO(Ride ride) {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setId(ride.getId());
-        rideDTO.setStartLocation(ride.getStartLocation());
-        rideDTO.setEndLocation(ride.getEndLocation());
+        rideDTO.setStartLocationLatitude(ride.getStartLocationLatitude());
+        rideDTO.setStartLocationLongitude(ride.getStartLocationLongitude());
+        rideDTO.setEndLocationLatitude(ride.getEndLocationLatitude());
+        rideDTO.setEndLocationLongitude(ride.getEndLocationLongitude());
         rideDTO.setStartTime(ride.getStartTime());
         rideDTO.setEndTime(ride.getEndTime());
         rideDTO.setStatus(ride.getStatus().name());
@@ -121,7 +123,7 @@ public class RideService {
         String userName = jwtService.extractUserName(header.substring(7));
         User user=userRepository.findByName(userName);
         if(Objects.equals(user.getRole(), "driver")) {
-            if (ride.getStatus()!= Ride.Status.COMPLETED) {
+            if (ride.getStatus()== Ride.Status.ONGOING) {
                 ride.setEndTime(LocalDateTime.now());
                 ride.setStatus(Ride.Status.COMPLETED);
                 ride = rideRepository.save(ride);
@@ -158,8 +160,10 @@ public class RideService {
             ride.setStatus(rideDetails.getStatus());
             ride.setDriver(rideDetails.getDriver());
             ride.setPassenger(rideDetails.getPassenger());
-            ride.setStartLocation(rideDetails.getStartLocation());
-            ride.setEndLocation(rideDetails.getEndLocation());
+            ride.setStartLocationLatitude(rideDetails.getStartLocationLatitude());
+            ride.setStartLocationLongitude(rideDetails.getStartLocationLongitude());
+            ride.setEndLocationLatitude(rideDetails.getEndLocationLatitude());
+            ride.setEndLocationLongitude(rideDetails.getEndLocationLongitude());
             ride.setStartTime(rideDetails.getStartTime());
             ride.setEndTime(rideDetails.getEndTime());
             ride.setCancellationReason(rideDetails.getCancellationReason());

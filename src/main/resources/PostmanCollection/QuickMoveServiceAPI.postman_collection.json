@@ -10,6 +10,34 @@
 			"name": "Admin",
 			"item": [
 				{
+					"name": "RegisterAdmin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"email\": \"newadmin@example.com\",\n    \"name\": \"test_admin\",\n    \"password\": \"test@admin\",\n    \"phone\": \"088111\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/users/register",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Admin Login",
 					"event": [
 						{
@@ -344,7 +372,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n    \"email\": \"jagannath.admin@example.com\",\n    \"name\": \"Jaggu_Admin\",\n    \"password\": \"Jaggu@admin\",\n     \"phone\": \"000111\",\n    \"role\": \"admin\"\n}",
+					"raw": "{ \n    \"email\": \"monday@example.com\",\n    \"name\": \"monday\",\n    \"password\": \"monday\",\n     \"phone\": \"042111\",\n    \"role\": \"passenger\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -388,7 +416,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Jaggu\",\n    \"password\": \"Jaggu@1234\"\n}",
+					"raw": "{\n    \"name\": \"sunday\",\n    \"password\": \"sunday\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -425,7 +453,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{apiUrl}}/api/rides/history?userId=5",
+					"raw": "{{apiUrl}}/api/rides/history?userId=16",
 					"host": [
 						"{{apiUrl}}"
 					],
@@ -437,7 +465,7 @@
 					"query": [
 						{
 							"key": "userId",
-							"value": "5"
+							"value": "16"
 						}
 					]
 				}
@@ -500,7 +528,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIiwiaWF0IjoxNzMxMDY5ODc1LCJleHAiOjE3MzEwNzM0NzV9.AAdwXNnvgQDms1uLyoAUqU-ls27e8FV2pdtVC0N47w8",
+							"value": "{{accessToken}}",
 							"type": "string"
 						}
 					]
@@ -508,7 +536,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{apiUrl}}/api/rides/cancel?rideId=3&reason=Wrong Address selected",
+					"raw": "{{apiUrl}}/api/rides/cancel?rideId=1&reason=Wrong Address selected",
 					"host": [
 						"{{apiUrl}}"
 					],
@@ -520,7 +548,7 @@
 					"query": [
 						{
 							"key": "rideId",
-							"value": "3"
+							"value": "1"
 						},
 						{
 							"key": "reason",
@@ -539,7 +567,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3MDEzMSwiZXhwIjoxNzMxMDczNzMxfQ.PeFFXwQA4S5QTkszqGm1XSp6Wm6QtkaWYoSX5xE8fIY",
+							"value": "{{accessToken}}",
 							"type": "string"
 						}
 					]
@@ -568,7 +596,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3NTg4NSwiZXhwIjoxNzMxMDc5NDg1fQ.KsDqd8FgIFKSeblZ7IebIB7UjmT6Q8D2ze4dm_CW1Do",
+							"value": "{{accessToken}}",
 							"type": "string"
 						}
 					]
@@ -576,7 +604,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{apiUrl}}/api/rides/accept?requestId=5",
+					"raw": "{{apiUrl}}/api/rides/accept?requestId=1",
 					"host": [
 						"{{apiUrl}}"
 					],
@@ -588,7 +616,7 @@
 					"query": [
 						{
 							"key": "requestId",
-							"value": "5"
+							"value": "1"
 						}
 					]
 				}
@@ -603,7 +631,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyMSIsImlhdCI6MTczMTA3NTg4NSwiZXhwIjoxNzMxMDc5NDg1fQ.KsDqd8FgIFKSeblZ7IebIB7UjmT6Q8D2ze4dm_CW1Do",
+							"value": "{{accessToken}}",
 							"type": "string"
 						}
 					]
@@ -611,7 +639,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{apiUrl}}/api/rides/complete?rideId=5",
+					"raw": "{{apiUrl}}/api/rides/complete?rideId=1&latitude=10.11&longitude=20.3",
 					"host": [
 						"{{apiUrl}}"
 					],
@@ -623,8 +651,55 @@
 					"query": [
 						{
 							"key": "rideId",
-							"value": "5"
+							"value": "1"
+						},
+						{
+							"key": "latitude",
+							"value": "10.11"
+						},
+						{
+							"key": "longitude",
+							"value": "20.3"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DriverProfile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"licenseNumber\": \"DL-1420110012345\",\n    \"vehicleType\": \"CAR\",\n    \"vehicleNumber\": \"KA019999\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleColor\": \"White\",\n    \"latitude\": -11.41020,\n    \"longitude\": 87.57929\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/api/driver/profile/1",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"driver",
+						"profile",
+						"1"
 					]
 				}
 			},

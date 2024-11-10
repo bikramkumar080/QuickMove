@@ -38,7 +38,7 @@ public class SecurityConfig {
                                                          .requestMatchers("api/rides/history","api/rides/cancel").hasAnyAuthority(
                                                                  "ROLE_passenger","ROLE_driver")
                                                          .requestMatchers("api/rides/check","api/rides/accept",
-                                                                 "api/rides/complete").hasAuthority(
+                                                                 "api/rides/complete", "api/driver/**").hasAuthority(
                                                                  "ROLE_driver")
                                                          .requestMatchers("/api/rides/book").hasAuthority(
                         "ROLE_passenger").
