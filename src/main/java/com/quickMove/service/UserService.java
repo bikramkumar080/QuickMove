@@ -1,7 +1,9 @@
 package com.quickMove.service;
 
 import com.quickMove.dto.UserDTO;
+import com.quickMove.dto.VehicleDTO;
 import com.quickMove.model.User;
+import com.quickMove.model.ennumeration.VehicleType;
 import com.quickMove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,21 @@ public class UserService {
         dto.setName(user.getName());
         dto.setRole(user.getRole());
         return dto;
+    }
+
+    public User updateDriverProfile(Long id, VehicleDTO body) {
+        User user = userRepository.findUserById(id);
+        if (user != null) {
+            user.setLicenseNumber(body.getLicenseNumber());
+            user.setVehicleType(VehicleType.valueOf(body.getVehicleType()));
+            user.setVehicleModel(body.getVehicleModel());
+            user.setVehicleColor(body.getVehicleColor());
+            user.setVehicleNumber(body.getVehicleNumber());
+            user.setLatitude(body.getLatitude());
+            user.setLongitude(body.getLongitude());
+
+            return userRepository.save(user);
+        }
+        return null;
     }
 }
