@@ -5,6 +5,7 @@ import com.quickMove.service.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,8 @@ public class UserAuthController {
             return ResponseEntity.created(URI.create("/users/" + user.getId())).body(user);
         } catch (UserAuthService.ConflictException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("A user with this email already exists");
+        }catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to perform this action please contact developer@quickmove.com");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
