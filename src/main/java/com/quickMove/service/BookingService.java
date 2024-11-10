@@ -6,6 +6,7 @@ import com.quickMove.model.Ride;
 import com.quickMove.model.User;
 import com.quickMove.repository.RideRepository;
 import com.quickMove.repository.UserRepository;
+import com.quickMove.utils.GeoLocationFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,8 @@ public class BookingService {
 //        Map<String, String> responseOutcome=parseDistanceMatrixResponse(response.getBody());
 
         Map<String, String> responseOutcome= parseDistanceMatrixResponse(responseBody);
+        double []pickupCoordinate = GeoLocationFetcher.getCoordinates(responseOutcome.get("pickup"));
+        double []dropCoordinate = GeoLocationFetcher.getCoordinates(responseOutcome.get("drop"));
         Ride ride =new Ride();
         if (responseOutcome.get("distance")!=null && responseOutcome.get("duration")!=null){
 
@@ -85,8 +88,10 @@ public class BookingService {
                                            .orElseThrow(() -> new RuntimeException("Passenger not found"));
             ride.setDriver(null);
             ride.setPassenger(passenger);
-            ride.setStartLocation(responseOutcome.get("pickup"));
-            ride.setEndLocation(responseOutcome.get("drop"));
+            ride.setStartLocationLatitude(pickupCoordinate[0]);
+            ride.setStartLocationLongitude(pickupCoordinate[1]);
+            ride.setEndLocationLatitude(dropCoordinate[0]);
+            ride.setEndLocationLongitude(dropCoordinate[1]);
             ride.setStartTime(null);
             ride.setEndTime(null);
             ride.setPrice(100);
