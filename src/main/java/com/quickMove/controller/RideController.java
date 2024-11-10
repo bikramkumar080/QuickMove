@@ -4,6 +4,7 @@ import com.quickMove.model.Ride;
 import com.quickMove.service.UserService;
 import com.quickMove.dto.RideDTO;
 import com.quickMove.service.RideService;
+import com.quickMove.utils.HaversineCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -106,9 +107,17 @@ public class RideController {
 
     @PostMapping("/complete")
     public ResponseEntity<Map<String, Object>> completeRide(@RequestHeader("Authorization") String header,
-            @RequestParam Long rideId) {
+            @RequestParam Long rideId, @RequestParam double latitude, @RequestParam double longitude) {
         try {
             RideDTO updatedRide = rideService.completeRide(header,rideId);
+            double distanceRemaining = HaversineCalculator.calculateDistance(updatedRide.getEndLocationLatitude(), updatedRide.getEndLocationLongitude(), latitude, longitude);
+            if(distanceRemaining*1000 > 100){
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("message", "Forceful Ride Completion");
+                errorResponse.put("remainingDistance (km)", distanceRemaining);
+                errorResponse.put("rideDetails", updatedRide);
+                return ResponseEntity.status(455).body(errorResponse);
+            }
             Map<String, Object> successResponse = new HashMap<>();
             successResponse.put("message", "Ride Completed");
             successResponse.put("ride", updatedRide);
