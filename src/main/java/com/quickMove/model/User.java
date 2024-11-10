@@ -1,6 +1,11 @@
 package com.quickMove.model;
 
+import com.quickMove.model.ennumeration.VehicleType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +13,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +32,21 @@ public class User implements UserDetails {
     private String phone;
 
     private String role;
+
+    private String licenseNumber;
+
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleType;
+
+    private String vehicleNumber;
+
+    private String vehicleModel;
+
+    private String vehicleColor;
+
+    private Double latitude;
+
+    private Double longitude;
 
     public void setId(Long id) {
         this.id = id;
