@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String phone;
 
     private String role;
-
+    @Column(unique = false, nullable = true)
     private String licenseNumber;
 
     @Enumerated(EnumType.STRING)
@@ -48,45 +48,6 @@ public class User implements UserDetails {
 
     private Double longitude;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getRole() {
-        return role;
-    }
     // Override UserDetails methods:
 
     @Override
@@ -124,8 +85,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

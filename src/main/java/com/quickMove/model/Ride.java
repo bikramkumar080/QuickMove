@@ -25,9 +25,13 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private String startLocation;
+    private Double startLocationLatitude;
 
-    private String endLocation;
+    private Double startLocationLongitude;
+
+    private Double endLocationLatitude;
+
+    private Double endLocationLongitude;
 
     private LocalDateTime startTime;
 
@@ -87,22 +91,6 @@ public class Ride {
 
     public void setPassenger(User passenger) {
         this.passenger = passenger;
-    }
-
-    public String getStartLocation() {
-        return startLocation;
-    }
-
-    public void setStartLocation(String startLocation) {
-        this.startLocation = startLocation;
-    }
-
-    public String getEndLocation() {
-        return endLocation;
-    }
-
-    public void setEndLocation(String endLocation) {
-        this.endLocation = endLocation;
     }
 
     public LocalDateTime getStartTime() {
