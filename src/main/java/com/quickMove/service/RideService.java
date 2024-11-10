@@ -123,7 +123,7 @@ public class RideService {
         String userName = jwtService.extractUserName(header.substring(7));
         User user=userRepository.findByName(userName);
         if(Objects.equals(user.getRole(), "driver")) {
-            if (ride.getStatus()!= Ride.Status.ONGOING) {
+            if (ride.getStatus()== Ride.Status.ONGOING) {
                 ride.setEndTime(LocalDateTime.now());
                 ride.setStatus(Ride.Status.COMPLETED);
                 ride = rideRepository.save(ride);
