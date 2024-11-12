@@ -1,5 +1,6 @@
 package com.quickMove.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class VehicleType {
     private Integer capacity;
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = true)
+    @JsonIgnore
     private Organization organization;
 }
