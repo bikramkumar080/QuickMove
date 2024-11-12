@@ -3,6 +3,7 @@ package com.quickMove.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quickMove.dto.RideDTO;
 import com.quickMove.dto.VehicleTypeCostDto;
 import com.quickMove.model.Organization;
 import com.quickMove.model.Ride;
@@ -87,9 +88,11 @@ public class BookingController {
                         }});
                     }
                 }
+                RideDTO ride = bookingService.createRideRequest(user, pickupCoordinate, dropCoordinate);
                 return ResponseEntity.ok().body(new HashMap<String, Object>() {{
                     put("message", "Rides found successfully");
                     put("data", responseMapData);
+                    put("ride", ride);
                 }});
             } else {
                 ResponseEntity.status(444).body(new HashMap<String, Object>() {{

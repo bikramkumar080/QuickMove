@@ -2,6 +2,7 @@ package com.quickMove.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quickMove.dto.RideDTO;
 import com.quickMove.model.Ride;
 import com.quickMove.model.User;
 import com.quickMove.repository.RideRepository;
@@ -29,6 +30,20 @@ public class BookingService {
 
     @Autowired
     private RideRepository rideRepository;
+    @Autowired
+    private RideService rideService;
+
+    public RideDTO createRideRequest(User passenger, double []pickupCoordinate, double []dropCoordinate) {
+        Ride ride= new Ride();
+        ride.setPassenger(passenger);
+        ride.setStartLocationLatitude(pickupCoordinate[0]);
+        ride.setStartLocationLongitude(pickupCoordinate[1]);
+        ride.setEndLocationLatitude(dropCoordinate[0]);
+        ride.setEndLocationLongitude(dropCoordinate[1]);
+        ride.setStatus(Ride.Status.OFFERED);
+
+        return rideService.convertToRideDTO(rideRepository.save(ride));
+    }
 
     public Ride bookRide(String pickupLocation, String dropLocation,String header) {
         Map<String, String> responseOutcome = GeoLocationFetcher.calculateRouteMetrix(pickupLocation, dropLocation);
@@ -51,7 +66,7 @@ public class BookingService {
             ride.setEndLocationLongitude(dropCoordinate[1]);
             ride.setStartTime(null);
             ride.setEndTime(null);
-            ride.setPrice(100);
+            ride.setPrice("100");
             ride.setStatus(Ride.Status.UNASSIGNED);
             ride.setCancellationReason(null);
 
