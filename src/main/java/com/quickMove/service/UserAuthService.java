@@ -37,7 +37,6 @@ public class UserAuthService {
     }
 
     public User register(User request){
-        User user = new User();
         if (repository.existsByEmail(request.getEmail())) {
             throw new ConflictException("A user with this email already exists.");
         }
@@ -47,13 +46,8 @@ public class UserAuthService {
         if(request.getRole().equals("admin")){
             throw new AccessDeniedException("You are not authorized to perform this action");
         }
-        user.setId(request.getId());
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
-        user.setPhone(request.getPhone());
-        return repository.save(user);
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        return repository.save(request);
     }
 
     public String login(User request) {

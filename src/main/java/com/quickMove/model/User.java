@@ -1,11 +1,11 @@
 package com.quickMove.model;
 
-import com.quickMove.model.ennumeration.VehicleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +35,8 @@ public class User implements UserDetails {
     @Column(unique = false, nullable = true)
     private String licenseNumber;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_type_id", nullable = true)
     private VehicleType vehicleType;
 
     private String vehicleNumber;
@@ -47,6 +48,11 @@ public class User implements UserDetails {
     private Double latitude;
 
     private Double longitude;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = true)
+    @JsonIgnore
+    private Organization organization;
 
     // Override UserDetails methods:
 
