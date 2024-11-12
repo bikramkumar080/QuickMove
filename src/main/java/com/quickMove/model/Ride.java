@@ -25,6 +25,8 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    private Long rideType;
+
     private Double startLocationLatitude;
 
     private Double startLocationLongitude;
@@ -35,29 +37,11 @@ public class Ride {
 
     private LocalDateTime startTime;
 
-    private Integer price;
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+    private String price;
 
     private LocalDateTime endTime;
 
     private String cancellationReason;
-
-    // Getters and setters
 
     public enum Status {
         OFFERED,
@@ -66,55 +50,6 @@ public class Ride {
         ONGOING,
         CANCELLED,
         COMPLETED
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getDriver() {
-        return driver;
-    }
-
-    public void setDriver(User driver) {
-        this.driver = driver;
-    }
-
-    public User getPassenger() {
-        return passenger;
-    }
-
-    public void setPassenger(User passenger) {
-        this.passenger = passenger;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getCancellationReason() {
-        return cancellationReason;
-    }
-
-    public void setCancellationReason(String cancellationReason) {
-        this.cancellationReason = cancellationReason;
     }
 }
 

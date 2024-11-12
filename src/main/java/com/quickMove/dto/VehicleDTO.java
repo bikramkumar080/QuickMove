@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VehicleDTO {
     private String licenseNumber;
-    private String vehicleType;
+    private Long vehicleType;
     private String vehicleNumber;
     private String vehicleModel;
     private String vehicleColor;

@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.quickMove.dto.RideDTO;
-import com.quickMove.dto.UserDTO;
 
 @Service
 public class RideService {
@@ -28,7 +27,12 @@ public class RideService {
 
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private UserService userService;
 
+    public Ride fetchRideById(Long id) {
+        return rideRepository.findById(id).orElse(null);
+    }
     public List<RideDTO> getRideHistoryByPassenger(Long passengerId) {
         List<Ride> rides = rideRepository.findByPassengerIdAndStatusIn(
                 passengerId,
@@ -63,7 +67,7 @@ public class RideService {
         return false;
     }
 
-    private RideDTO convertToRideDTO(Ride ride) {
+    public RideDTO convertToRideDTO(Ride ride) {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setId(ride.getId());
         rideDTO.setStartLocationLatitude(ride.getStartLocationLatitude());
@@ -73,25 +77,14 @@ public class RideService {
         rideDTO.setStartTime(ride.getStartTime());
         rideDTO.setEndTime(ride.getEndTime());
         rideDTO.setStatus(ride.getStatus().name());
-        rideDTO.setPrice(rideDTO.getPrice());
-        if (ride.getDriver() != null) {
-            rideDTO.setDriverId(ride.getDriver().getId());
+        rideDTO.setPrice(ride.getPrice());
+        rideDTO.setCancellationReason(ride.getCancellationReason());
+        rideDTO.setRideType(ride.getRideType());
+        if(ride.getDriver()!=null) {
+            rideDTO.setDriver(userService.findDriverById(ride.getDriver().getId()).orElse(null));
         }
-        if (ride.getPassenger() != null) {
-            rideDTO.setPassengerId(ride.getPassenger().getId());
-        }
+        rideDTO.setPassenger(userService.findUserById(ride.getPassenger().getId()).orElse(null));
         return rideDTO;
-    }
-
-    private UserDTO convertToUserDTO(User user) {
-        if (user == null) return null;
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setName(user.getName());
-        dto.setPhone(user.getPhone());
-        dto.setRole(user.getRole());
-        return dto;
     }
 
     public List<RideDTO> checkRideRequest() {
@@ -102,9 +95,8 @@ public class RideService {
     public RideDTO acceptRideRequest(String header,Long rideId) {
         Ride ride = rideRepository.findById(rideId)
                                   .orElseThrow(() -> new RuntimeException("Ride not found"));
-        if(ride.getDriver()==null || ride.getStatus()!= Ride.Status.ASSIGNED) {
-            String userName = jwtService.extractUserName(header.substring(7));
-            User user = userRepository.findByName(userName);
+        if(ride.getDriver()==null || ride.getStatus()== Ride.Status.UNASSIGNED) {
+            User user = userService.fetchUserDetails(header);
             User driver = userRepository.findById(user.getId())
                                         .orElseThrow(() -> new RuntimeException("Passenger not found"));
             ride.setDriver(driver);
@@ -130,7 +122,7 @@ public class RideService {
                 return convertToRideDTO(ride);
             }
             else {
-                throw new RuntimeException("Already Completed");
+                throw new RuntimeException("Not an ongoing ride");
             }
         }
         else {throw new RuntimeException("You are not authorized to perform this action"); }
@@ -178,5 +170,21 @@ public class RideService {
             return true;
         }
         return false;
+    }
+
+    public List<RideDTO> searchRides(Long vehicleTypeId) {
+        return rideRepository.findByRideTypeAndStatus(vehicleTypeId, Ride.Status.UNASSIGNED).stream().map(this::convertToRideDTO).collect(Collectors.toList());
+    }
+
+    public RideDTO startRide(Long rideId) {
+        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new RuntimeException("Ride not found"));
+        if (ride.getStatus() == Ride.Status.ASSIGNED) {
+            ride.setStatus(Ride.Status.ONGOING);
+            ride.setStartTime(LocalDateTime.now());
+            ride = rideRepository.save(ride);
+            return convertToRideDTO(ride);
+        } else {
+            throw new RuntimeException("Ride not in ASSIGNED state");
+        }
     }
 }

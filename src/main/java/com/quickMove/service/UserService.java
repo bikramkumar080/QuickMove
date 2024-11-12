@@ -1,9 +1,9 @@
 package com.quickMove.service;
 
+import com.quickMove.dto.DriverDto;
 import com.quickMove.dto.UserDTO;
 import com.quickMove.dto.VehicleDTO;
 import com.quickMove.model.User;
-import com.quickMove.model.ennumeration.VehicleType;
 import com.quickMove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JWTService jwtService;
 
     public String getUserRole(Long userId) {
         User user = userRepository.findUserById(userId);
@@ -37,6 +40,9 @@ public class UserService {
 
     public Optional<UserDTO> findUserById(Long id) {
         return userRepository.findById(id).map(this::convertToUserDTO);
+    }
+    public Optional<DriverDto> findDriverById(Long id) {
+        return userRepository.findById(id).map(this::convertToDriverDto);
     }
 
     public Optional<UserDTO> updateUser(Long id, User userDetails) {
@@ -64,15 +70,32 @@ public class UserService {
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
-        dto.setRole(user.getRole());
+        dto.setPhone(user.getPhone());
+        dto.setOrganizationId(user.getOrganization().getId());
+        return dto;
+    }
+    private DriverDto convertToDriverDto(User user) {
+        DriverDto dto = new DriverDto();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setName(user.getName());
+        dto.setPhone(user.getPhone());
+        dto.setOrganizationId(user.getOrganization().getId());
+        dto.setCapacity(user.getVehicleType().getCapacity());
+        dto.setVehicleType(user.getVehicleType().getType());
+        dto.setLicenseNumber(user.getLicenseNumber());
+        dto.setVehicleNumber(user.getVehicleNumber());
+        dto.setVehicleModel(user.getVehicleModel());
+        dto.setVehicleColor(user.getVehicleColor());
+        dto.setVehicleTypeId(user.getVehicleType().getId());
         return dto;
     }
 
     public User updateDriverProfile(Long id, VehicleDTO body) {
         User user = userRepository.findUserById(id);
         if (user != null) {
+            user.getVehicleType().setId(body.getVehicleType());
             user.setLicenseNumber(body.getLicenseNumber());
-            user.setVehicleType(VehicleType.valueOf(body.getVehicleType()));
             user.setVehicleModel(body.getVehicleModel());
             user.setVehicleColor(body.getVehicleColor());
             user.setVehicleNumber(body.getVehicleNumber());
@@ -82,5 +105,11 @@ public class UserService {
             return userRepository.save(user);
         }
         return null;
+    }
+
+    public User fetchUserDetails(String header) {
+        String userName = jwtService.extractUserName(header.substring(7));
+        User user = userRepository.findByName(userName);
+        return user;
     }
 }

@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"email\": \"newadmin@example.com\",\n    \"name\": \"test_admin\",\n    \"password\": \"test@admin\",\n    \"phone\": \"088111\",\n    \"role\": \"admin\"\n}",
+							"raw": "{ \n    \"email\": \"admin@pas.com\",\n    \"name\": \"Jaggu\",\n    \"password\": \"Jaggu@Admin\",\n    \"phone\": \"1122334455\",\n    \"role\": \"adm\",\n    \"organization\": {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,7 +60,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Jaggu_Admin\",\n    \"password\": \"Jaggu@admin\"\n}",
+							"raw": "{\n    \"name\": \"Jaggu\",\n    \"password\": \"Jaggu@Admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,6 +332,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Register Cost-Calc Service URL",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/admin/cost-calc-endpoint?costCalculationUrl=http://127.0.0.1:5532/cost-calculator",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"cost-calc-endpoint"
+							],
+							"query": [
+								{
+									"key": "costCalculationUrl",
+									"value": "http://127.0.0.1:5532/cost-calculator"
+								},
+								{
+									"key": "authToken",
+									"value": "EVH9OW8EYUFG983H49V8H",
+									"description": "Optional",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"auth": {
@@ -366,344 +397,615 @@
 			]
 		},
 		{
-			"name": "RegisterUser",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{ \n    \"email\": \"monday@example.com\",\n    \"name\": \"monday\",\n    \"password\": \"monday\",\n     \"phone\": \"042111\",\n    \"role\": \"passenger\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiUrl}}/api/users/register",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UserLogin",
-			"event": [
+			"name": "Passenger",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"if(pm.response.code == 200){",
-							"    pm.environment.set(\"accessToken\",pm.response.text());",
-							"}"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"sunday\",\n    \"password\": \"sunday\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiUrl}}/api/users/login",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetRideHistory",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/history?userId=16",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"history"
-					],
-					"query": [
-						{
-							"key": "userId",
-							"value": "16"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "BookRide",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/book?pickupLocation=Bangalore Whitefield&dropLocation=Bangalore Electronic City",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"book"
-					],
-					"query": [
-						{
-							"key": "pickupLocation",
-							"value": "Bangalore Whitefield"
+					"name": "RegisterPassenger",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"passenger@email.com\",\n    \"name\": \"passenger1\",\n    \"password\": \"passenger@1234\",\n    \"phone\": \"1234\",\n    \"role\": \"passenger\",\n    \"organization\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "dropLocation",
-							"value": "Bangalore Electronic City"
+						"url": {
+							"raw": "{{apiUrl}}/api/users/register",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CancelRide",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
+					},
+					"response": []
 				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/cancel?rideId=1&reason=Wrong Address selected",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"cancel"
-					],
-					"query": [
+				{
+					"name": "PassengerLogin",
+					"event": [
 						{
-							"key": "rideId",
-							"value": "1"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code == 200){",
+									"    pm.environment.set(\"accessToken\",pm.response.text());",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "reason",
-							"value": "Wrong Address selected"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CheckRideRequests",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/check",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"check"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "AcceptRideRequest",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/accept?requestId=1",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"accept"
-					],
-					"query": [
-						{
-							"key": "requestId",
-							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CompleteRide",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/api/rides/complete?rideId=1&latitude=10.11&longitude=20.3",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"api",
-						"rides",
-						"complete"
-					],
-					"query": [
-						{
-							"key": "rideId",
-							"value": "1"
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"passenger1\",\n    \"password\": \"passenger@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "latitude",
-							"value": "10.11"
-						},
-						{
-							"key": "longitude",
-							"value": "20.3"
+						"url": {
+							"raw": "{{apiUrl}}/api/users/login",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "SearchRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/search?pickupLocation=Bangalore Whitefield&dropLocation=Bangalore Electronic City",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"search"
+							],
+							"query": [
+								{
+									"key": "pickupLocation",
+									"value": "Bangalore Whitefield"
+								},
+								{
+									"key": "dropLocation",
+									"value": "Bangalore Electronic City"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BookRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/book?rideId=3&vehicleTypeId=1&cost=9063.0$",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"book"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "3"
+								},
+								{
+									"key": "vehicleTypeId",
+									"value": "1"
+								},
+								{
+									"key": "cost",
+									"value": "9063.0$"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/cancel?rideId=1&reason=Wrong Address selected",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "1"
+								},
+								{
+									"key": "reason",
+									"value": "Wrong Address selected"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRideHistory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/history?userId=1",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"history"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "DriverProfile",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+			"name": "Driver",
+			"item": [
+				{
+					"name": "DriverCompleteRegistration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"driver@email.com\",\n    \"name\": \"driver1\",\n    \"password\": \"driver@1234\",\n    \"phone\": \"4321\",\n    \"role\": \"driver\",\n    \"organization\": {\n        \"id\": 1\n    },\n    \"licenseNumber\": \"DL12345678901234\",\n    \"vehicleNumber\": \"DL12 AB 1234\",\n    \"vehicleColor\": \"White\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleType\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/users/register",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DriverRegistration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"passenger@email.com\",\n    \"name\": \"passenger1\",\n    \"password\": \"passenger@1234\",\n    \"phone\": \"1234\",\n    \"role\": \"passenger\",\n    \"organization\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/users/register",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DriverLogin",
+					"event": [
 						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code == 200){",
+									"    pm.environment.set(\"accessToken\",pm.response.text());",
+									"}"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"licenseNumber\": \"DL-1420110012345\",\n    \"vehicleType\": \"CAR\",\n    \"vehicleNumber\": \"KA019999\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleColor\": \"White\",\n    \"latitude\": -11.41020,\n    \"longitude\": 87.57929\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiUrl}}/api/driver/profile/1",
-					"host": [
-						"{{apiUrl}}"
 					],
-					"path": [
-						"api",
-						"driver",
-						"profile",
-						"1"
-					]
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"driver1\",\n    \"password\": \"driver@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/users/login",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DriverProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseNumber\": \"DL-1420110012345\",\n    \"vehicleType\": \"CAR\",\n    \"vehicleNumber\": \"KA019999\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleColor\": \"White\",\n    \"latitude\": -11.41020,\n    \"longitude\": 87.57929\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/driver/profile/1",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"driver",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckRideRequests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/check",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AcceptRideRequest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/accept?rideId=3",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StartRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/start?rideId=3",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"start"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CompleteRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/complete?rideId=3&latitude=10.11&longitude=20.3",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"complete"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "3"
+								},
+								{
+									"key": "latitude",
+									"value": "10.11"
+								},
+								{
+									"key": "longitude",
+									"value": "20.3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelRide",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/cancel?rideId=1&reason=Wrong Address selected",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "rideId",
+									"value": "1"
+								},
+								{
+									"key": "reason",
+									"value": "Wrong Address selected"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRideHistory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/rides/history?userId=16",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"rides",
+								"history"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "16"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
