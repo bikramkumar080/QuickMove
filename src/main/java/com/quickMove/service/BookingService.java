@@ -30,51 +30,8 @@ public class BookingService {
     @Autowired
     private RideRepository rideRepository;
 
-    @Value("${google.maps.api.key}")
-    private String apiKey;
-
-    private final String DISTANCE_MATRIX_URL = "https://maps.googleapis.com/maps/api/distancematrix/json";
-
     public Ride bookRide(String pickupLocation, String dropLocation,String header) {
-
-        // Build the Google Maps API URL
-        String url = String.format("%s?origins=%s&destinations=%s&key=%s",
-                DISTANCE_MATRIX_URL,
-                pickupLocation,
-                dropLocation,
-                apiKey);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        String responseBody = "{\n" +
-                "   \"destination_addresses\" : [\n" +
-                "      \"Los Angeles, CA, USA\"\n" +
-                "   ],\n" +
-                "   \"origin_addresses\" : [\n" +
-                "      \"New York, NY, USA\"\n" +
-                "   ],\n" +
-                "   \"rows\" : [\n" +
-                "      {\n" +
-                "         \"elements\" : [\n" +
-                "            {\n" +
-                "               \"distance\" : {\n" +
-                "                  \"text\" : \"2,451 mi\",\n" +
-                "                  \"value\" : 3945032\n" +
-                "               },\n" +
-                "               \"duration\" : {\n" +
-                "                  \"text\" : \"1 day 14 hours\",\n" +
-                "                  \"value\" : 137440\n" +
-                "               },\n" +
-                "               \"status\" : \"OK\"\n" +
-                "            }\n" +
-                "         ]\n" +
-                "      }\n" +
-                "   ],\n" +
-                "   \"status\" : \"OK\"\n" +
-                "}";
-
-//        Map<String, String> responseOutcome=parseDistanceMatrixResponse(response.getBody());
-
-        Map<String, String> responseOutcome= parseDistanceMatrixResponse(responseBody);
+        Map<String, String> responseOutcome = GeoLocationFetcher.calculateRouteMetrix(pickupLocation, dropLocation);
         double []pickupCoordinate = GeoLocationFetcher.getCoordinates(responseOutcome.get("pickup"));
         double []dropCoordinate = GeoLocationFetcher.getCoordinates(responseOutcome.get("drop"));
         Ride ride =new Ride();
@@ -101,30 +58,6 @@ public class BookingService {
             return rideRepository.save(ride);
         }
         throw new RuntimeException("Distance or duration not found in the response.");
-    }
-
-    private Map<String, String> parseDistanceMatrixResponse(String responseBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(responseBody);
-            String pickup = rootNode.path("origin_addresses").get(0).asText();
-            String drop = rootNode.path("destination_addresses").get(0).asText();
-            JsonNode elementNode = rootNode.path("rows").get(0).path("elements").get(0);
-            String distance = elementNode.path("distance").path("text").asText();
-            String duration = elementNode.path("duration").path("text").asText();
-
-            // Return the result as a Map
-            Map<String, String> result = new HashMap<>();
-            result.put("distance", distance);
-            result.put("duration", duration);
-            result.put("pickup",pickup);
-            result.put("drop",drop);
-
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public String modifyLocation(String location) {
