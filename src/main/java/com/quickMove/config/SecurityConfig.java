@@ -40,7 +40,7 @@ public class SecurityConfig {
                                                          .requestMatchers("api/rides/check","api/rides/accept",
                                                                  "api/rides/complete", "api/driver/**").hasAuthority(
                                                                  "ROLE_driver")
-                                                         .requestMatchers("/api/rides/book").hasAuthority(
+                                                         .requestMatchers("/api/rides/book", "/api/rides/search").hasAuthority(
                         "ROLE_passenger").
                         requestMatchers("/api/admin/**").hasAuthority("ROLE_admin").
                                                                  anyRequest().authenticated()).sessionManagement(manager ->manager.sessionCreationPolicy(
