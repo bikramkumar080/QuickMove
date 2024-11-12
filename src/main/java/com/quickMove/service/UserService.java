@@ -1,5 +1,6 @@
 package com.quickMove.service;
 
+import com.quickMove.dto.DriverDto;
 import com.quickMove.dto.UserDTO;
 import com.quickMove.dto.VehicleDTO;
 import com.quickMove.model.User;
@@ -40,6 +41,9 @@ public class UserService {
     public Optional<UserDTO> findUserById(Long id) {
         return userRepository.findById(id).map(this::convertToUserDTO);
     }
+    public Optional<DriverDto> findDriverById(Long id) {
+        return userRepository.findById(id).map(this::convertToDriverDto);
+    }
 
     public Optional<UserDTO> updateUser(Long id, User userDetails) {
         return userRepository.findById(id).map(user -> {
@@ -66,7 +70,24 @@ public class UserService {
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
-        dto.setRole(user.getRole());
+        dto.setPhone(user.getPhone());
+        dto.setOrganizationId(user.getOrganization().getId());
+        return dto;
+    }
+    private DriverDto convertToDriverDto(User user) {
+        DriverDto dto = new DriverDto();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setName(user.getName());
+        dto.setPhone(user.getPhone());
+        dto.setOrganizationId(user.getOrganization().getId());
+        dto.setCapacity(user.getVehicleType().getCapacity());
+        dto.setVehicleType(user.getVehicleType().getType());
+        dto.setLicenseNumber(user.getLicenseNumber());
+        dto.setVehicleNumber(user.getVehicleNumber());
+        dto.setVehicleModel(user.getVehicleModel());
+        dto.setVehicleColor(user.getVehicleColor());
+        dto.setVehicleTypeId(user.getVehicleType().getId());
         return dto;
     }
 

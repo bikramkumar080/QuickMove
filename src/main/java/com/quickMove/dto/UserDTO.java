@@ -1,15 +1,18 @@
 package com.quickMove.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class UserDTO {
     private Long id;
     private String name;
-    private String role;
     private String email;
+    private String phone;
+    private Long organizationId;
 
     public Long getId() {
         return id;
@@ -27,14 +30,6 @@ public class UserDTO {
         this.name = name;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -50,6 +45,4 @@ public class UserDTO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    private String phone;
 }

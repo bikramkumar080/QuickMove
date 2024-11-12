@@ -28,6 +28,8 @@ public class RideService {
 
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private UserService userService;
 
     public List<RideDTO> getRideHistoryByPassenger(Long passengerId) {
         List<Ride> rides = rideRepository.findByPassengerIdAndStatusIn(
@@ -63,7 +65,7 @@ public class RideService {
         return false;
     }
 
-    private RideDTO convertToRideDTO(Ride ride) {
+    public RideDTO convertToRideDTO(Ride ride) {
         RideDTO rideDTO = new RideDTO();
         rideDTO.setId(ride.getId());
         rideDTO.setStartLocationLatitude(ride.getStartLocationLatitude());
@@ -74,24 +76,13 @@ public class RideService {
         rideDTO.setEndTime(ride.getEndTime());
         rideDTO.setStatus(ride.getStatus().name());
         rideDTO.setPrice(rideDTO.getPrice());
-        if (ride.getDriver() != null) {
-            rideDTO.setDriverId(ride.getDriver().getId());
+        rideDTO.setCancellationReason(ride.getCancellationReason());
+        rideDTO.setRideType(ride.getRideType());
+        if(ride.getDriver()!=null) {
+            rideDTO.setDriver(userService.findDriverById(ride.getDriver().getId()).orElse(null));
         }
-        if (ride.getPassenger() != null) {
-            rideDTO.setPassengerId(ride.getPassenger().getId());
-        }
+        rideDTO.setPassenger(userService.findUserById(ride.getPassenger().getId()).orElse(null));
         return rideDTO;
-    }
-
-    private UserDTO convertToUserDTO(User user) {
-        if (user == null) return null;
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setName(user.getName());
-        dto.setPhone(user.getPhone());
-        dto.setRole(user.getRole());
-        return dto;
     }
 
     public List<RideDTO> checkRideRequest() {
