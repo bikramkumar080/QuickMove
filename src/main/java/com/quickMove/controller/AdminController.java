@@ -2,8 +2,11 @@ package com.quickMove.controller;
 
 import com.quickMove.dto.RideDTO;
 import com.quickMove.dto.UserDTO;
+import com.quickMove.model.Organization;
 import com.quickMove.model.Ride;
 import com.quickMove.model.User;
+import com.quickMove.service.Impl.OrganizationService;
+import com.quickMove.service.JWTService;
 import com.quickMove.service.RideService;
 import com.quickMove.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,12 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JWTService jwtService;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     @GetMapping("/rides")
     public ResponseEntity<?> getRides(
@@ -93,5 +102,26 @@ public class AdminController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/cost-calc-endpoint")
+    public ResponseEntity<String> registerCostCalculationEndpoint(@RequestHeader("Authorization") String header,
+                                                                  @RequestParam  String costCalculationUrl,
+                                                                  @RequestParam(required = false) String authToken) {
+        User user = userService.fetchUserDetails(header);
+        if(user!=null){
+            Long organizationId = user.getOrganization().getId();
+            Organization organization = organizationService.fetchOrganizationById(organizationId);
+            if(organization != null) {
+                organization.setCostCalculationUrl(costCalculationUrl);
+                if(authToken != null) {
+                    organization.setAuthToken(authToken);
+                }
+                organizationService.save(organization);
+                return ResponseEntity.ok("Cost calculation endpoint registered successfully.");
+            }
+            return ResponseEntity.badRequest().body("Organization not found for the admin user.");
+        }
+        return ResponseEntity.badRequest().body("User not found.");
     }
 }
