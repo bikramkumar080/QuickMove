@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.quickMove.dto.RideDTO;
-import com.quickMove.dto.UserDTO;
 
 @Service
 public class RideService {
@@ -172,5 +171,9 @@ public class RideService {
             return true;
         }
         return false;
+    }
+
+    public List<RideDTO> searchRides(Long vehicleTypeId) {
+        return rideRepository.findByRideTypeAndStatus(vehicleTypeId, Ride.Status.UNASSIGNED).stream().map(this::convertToRideDTO).collect(Collectors.toList());
     }
 }

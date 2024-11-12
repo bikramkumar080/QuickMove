@@ -1,8 +1,11 @@
 package com.quickMove.controller;
 
+import com.quickMove.model.User;
+import com.quickMove.model.VehicleType;
 import com.quickMove.service.UserService;
 import com.quickMove.dto.RideDTO;
 import com.quickMove.service.RideService;
+import com.quickMove.service.VehicleTypeService;
 import com.quickMove.utils.CalculatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ public class RideController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private VehicleTypeService vehicleTypeService;
 
     @GetMapping("/history")
     public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId) {
@@ -63,16 +68,21 @@ public class RideController {
         }
     }
     @GetMapping("/check")
-    public ResponseEntity<Object> getAllRides() {
+    public ResponseEntity<Object> getAllRides(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            List<RideDTO> rides = rideService.checkRideRequest();
+            User user = userService.fetchUserDetails(authorizationHeader);
+            VehicleType vehicleType = vehicleTypeService.fetchVehiclesTypesById(user.getVehicleType().getId());
+            List<RideDTO> rides = rideService.searchRides(vehicleType.getId());
             if (rides.isEmpty()) {
                 return ResponseEntity.ok().body(new HashMap<String, Object>() {{
                     put("message", "No requests available");
                     put("data", new ArrayList<>());
                 }});
             }
-            return ResponseEntity.ok(rides);
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {{
+                put("message", "Rides found successfully");
+                put("data", rides);
+            }});
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(new HashMap<String, Object>() {{
