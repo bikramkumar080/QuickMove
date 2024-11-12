@@ -94,9 +94,9 @@ public class RideController {
 
     @PostMapping("/accept")
     public ResponseEntity<Map<String, Object>> acceptRequest(@RequestHeader("Authorization") String header,
-            @RequestParam Long requestId) {
+            @RequestParam Long rideId) {
         try {
-            RideDTO updatedRide = rideService.acceptRideRequest(header,requestId);
+            RideDTO updatedRide = rideService.acceptRideRequest(header, rideId);
             Map<String, Object> successResponse = new HashMap<>();
             successResponse.put("message", "Ride accepted");
             successResponse.put("ride", updatedRide);
@@ -144,5 +144,24 @@ public class RideController {
 
     }
 
+    @PostMapping("/start")
+    public ResponseEntity<Map<String, Object>> startRide(@RequestParam Long rideId) {
+        try {
+            RideDTO updatedRide = rideService.startRide(rideId);
+            Map<String, Object> successResponse = new HashMap<>();
+            successResponse.put("message", "Ride Started");
+            successResponse.put("ride", updatedRide);
+            return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
+        }catch (RuntimeException e){
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }catch (Exception e){
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
+    }
 
 }

@@ -95,9 +95,8 @@ public class RideService {
     public RideDTO acceptRideRequest(String header,Long rideId) {
         Ride ride = rideRepository.findById(rideId)
                                   .orElseThrow(() -> new RuntimeException("Ride not found"));
-        if(ride.getDriver()==null || ride.getStatus()!= Ride.Status.ASSIGNED) {
-            String userName = jwtService.extractUserName(header.substring(7));
-            User user = userRepository.findByName(userName);
+        if(ride.getDriver()==null || ride.getStatus()== Ride.Status.UNASSIGNED) {
+            User user = userService.fetchUserDetails(header);
             User driver = userRepository.findById(user.getId())
                                         .orElseThrow(() -> new RuntimeException("Passenger not found"));
             ride.setDriver(driver);
@@ -123,7 +122,7 @@ public class RideService {
                 return convertToRideDTO(ride);
             }
             else {
-                throw new RuntimeException("Already Completed");
+                throw new RuntimeException("Not an ongoing ride");
             }
         }
         else {throw new RuntimeException("You are not authorized to perform this action"); }
@@ -175,5 +174,17 @@ public class RideService {
 
     public List<RideDTO> searchRides(Long vehicleTypeId) {
         return rideRepository.findByRideTypeAndStatus(vehicleTypeId, Ride.Status.UNASSIGNED).stream().map(this::convertToRideDTO).collect(Collectors.toList());
+    }
+
+    public RideDTO startRide(Long rideId) {
+        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new RuntimeException("Ride not found"));
+        if (ride.getStatus() == Ride.Status.ASSIGNED) {
+            ride.setStatus(Ride.Status.ONGOING);
+            ride.setStartTime(LocalDateTime.now());
+            ride = rideRepository.save(ride);
+            return convertToRideDTO(ride);
+        } else {
+            throw new RuntimeException("Ride not in ASSIGNED state");
+        }
     }
 }
