@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/rides")
@@ -108,28 +105,36 @@ public class BookingController {
     }
 
     @PostMapping("/book")
-    public ResponseEntity<Object> getModifiedLocations(@RequestHeader("Authorization") String authorizationHeader,
-            @RequestParam String pickupLocation,
-            @RequestParam String dropLocation) {
+    public ResponseEntity<Object> getModifiedLocations(
+            @RequestParam Long rideId,
+            @RequestParam Long vehicleTypeId,
+            @RequestParam String cost) {
         try {
-            Ride bookedRide = bookingService.bookRide(pickupLocation, dropLocation, authorizationHeader);
-            if (bookedRide != null) {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                                     .body(new HashMap<String, Object>() {{
-                                         put("message", "Ride successfully booked");
-                                         put("ride", bookedRide);
-                                     }});
-            } else {
+            Ride ride = rideService.fetchRideById(rideId);
+            if (ride == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                     .body(new HashMap<String, Object>() {{
-                                         put("message", "Unable to book ride. Please try again.");
-                                     }});
+                        .body(new HashMap<String, Object>() {{
+                            put("message", "RideId is invalid");
+                        }});
             }
+            if (ride.getStatus() != Ride.Status.OFFERED) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new HashMap<String, Object>() {{
+                            put("message", "Ride is not in OFFERED state");
+                        }});
+            }
+            ride.setStatus(Ride.Status.UNASSIGNED);
+            ride.setPrice(cost);
+            ride.setRideType(vehicleTypeId);
+            RideDTO rideDTO = rideService.saveRide(ride);
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {{
+                put("message", "Ride booked successfully");
+                put("ride", rideDTO);
+            }});
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(new HashMap<String, Object>() {{
-                                     put("message", "An error occurred while booking the ride. Please try again.");
-                                 }});
+            return ResponseEntity.status(500).body(new HashMap<String, Object>() {{
+                put("message", "An error occurred while booking the ride. Please try again.");
+            }});
         }
     }
 

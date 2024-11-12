@@ -20,7 +20,7 @@ public class RideDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String status;
-    private Integer price;
+    private String price;
     private Long rideType;
     private String cancellationReason;
 }

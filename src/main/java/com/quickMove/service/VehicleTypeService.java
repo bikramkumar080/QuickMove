@@ -15,4 +15,8 @@ public class VehicleTypeService {
     public List<VehicleType> fetchVehiclesTypesOfOrg(Long id){
         return vehicleTypeRepository.findByOrganization_Id(id);
     }
+
+    public VehicleType fetchVehiclesTypesById(Long vehicleTypeId) {
+        return vehicleTypeRepository.findById(vehicleTypeId).orElse(null);
+    }
 }

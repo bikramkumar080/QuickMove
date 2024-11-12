@@ -31,6 +31,9 @@ public class RideService {
     @Autowired
     private UserService userService;
 
+    public Ride fetchRideById(Long id) {
+        return rideRepository.findById(id).orElse(null);
+    }
     public List<RideDTO> getRideHistoryByPassenger(Long passengerId) {
         List<Ride> rides = rideRepository.findByPassengerIdAndStatusIn(
                 passengerId,
@@ -75,7 +78,7 @@ public class RideService {
         rideDTO.setStartTime(ride.getStartTime());
         rideDTO.setEndTime(ride.getEndTime());
         rideDTO.setStatus(ride.getStatus().name());
-        rideDTO.setPrice(rideDTO.getPrice());
+        rideDTO.setPrice(ride.getPrice());
         rideDTO.setCancellationReason(ride.getCancellationReason());
         rideDTO.setRideType(ride.getRideType());
         if(ride.getDriver()!=null) {
