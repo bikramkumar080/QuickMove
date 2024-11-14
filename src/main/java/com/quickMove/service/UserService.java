@@ -4,7 +4,9 @@ import com.quickMove.dto.DriverDto;
 import com.quickMove.dto.UserDTO;
 import com.quickMove.dto.VehicleDTO;
 import com.quickMove.model.User;
+import com.quickMove.model.VehicleType;
 import com.quickMove.repository.UserRepository;
+import com.quickMove.repository.VehicleTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class UserService {
 
     @Autowired
     private JWTService jwtService;
+
+    @Autowired
+    private VehicleTypeRepository vehicleTypeRepository;
 
     public String getUserRole(Long userId) {
         User user = userRepository.findUserById(userId);
@@ -93,8 +98,15 @@ public class UserService {
 
     public User updateDriverProfile(Long id, VehicleDTO body) {
         User user = userRepository.findUserById(id);
+        VehicleType type = vehicleTypeRepository.findByType(body.getVehicleType());
+        if (type == null) {
+            type = new VehicleType();
+            type.setType(body.getVehicleType());
+            type.setCapacity(4);
+            vehicleTypeRepository.save(type);
+        }
         if (user != null) {
-            user.getVehicleType().setId(body.getVehicleType());
+            user.setVehicleType(type);
             user.setLicenseNumber(body.getLicenseNumber());
             user.setVehicleModel(body.getVehicleModel());
             user.setVehicleColor(body.getVehicleColor());

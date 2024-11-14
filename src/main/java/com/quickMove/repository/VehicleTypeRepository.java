@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, Long> {
     List<VehicleType> findByOrganization_Id(Long id);
+    VehicleType findByType(String type);
+
 }

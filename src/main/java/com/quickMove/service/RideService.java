@@ -2,6 +2,7 @@ package com.quickMove.service;
 
 import com.quickMove.model.Ride;
 import com.quickMove.model.User;
+import com.quickMove.model.VehicleType;
 import com.quickMove.repository.RideRepository;
 import com.quickMove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class RideService {
     private JWTService jwtService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private VehicleTypeService vehicleTypeService;
 
     public Ride fetchRideById(Long id) {
         return rideRepository.findById(id).orElse(null);
@@ -92,20 +96,26 @@ public class RideService {
         return rides.stream().map(this::convertToRideDTO).collect(Collectors.toList());
     }
 
-    public RideDTO acceptRideRequest(String header,Long rideId) {
+    public RideDTO acceptRideRequest(String header, Long rideId) {
+        User user = userService.fetchUserDetails(header);
+        VehicleType vehicleType = vehicleTypeService.fetchVehiclesTypesById(user.getVehicleType().getId());
         Ride ride = rideRepository.findById(rideId)
                                   .orElseThrow(() -> new RuntimeException("Ride not found"));
-        if(ride.getDriver()==null || ride.getStatus()== Ride.Status.UNASSIGNED) {
-            User user = userService.fetchUserDetails(header);
+        if (ride.getDriver() == null || ride.getStatus() == Ride.Status.UNASSIGNED) {
             User driver = userRepository.findById(user.getId())
-                                        .orElseThrow(() -> new RuntimeException("Passenger not found"));
-            ride.setDriver(driver);
-            ride.setStatus(Ride.Status.ASSIGNED);
-            ride.setStartTime(LocalDateTime.now());
-            ride = rideRepository.save(ride);
-            return convertToRideDTO(ride);
-        }else{
-            throw new RuntimeException("Already Accepted");
+                                        .orElseThrow(() -> new RuntimeException("Driver not found"));
+            if (ride.getRideType().equals(vehicleType.getType())) {
+                ride.setDriver(driver);
+                ride.setStatus(Ride.Status.ASSIGNED);
+                ride.setStartTime(LocalDateTime.now());
+                ride = rideRepository.save(ride);
+                return convertToRideDTO(ride);
+            } else {
+                throw new RuntimeException("Vehicle type does not match the ride type.");
+            }
+
+        } else {
+            throw new RuntimeException("Ride already accepted.");
         }
     }
 

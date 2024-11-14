@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "13863e1e-0d86-41c5-bb65-fb628a998ba8",
+		"_postman_id": "a37d04f2-2431-4395-aa88-a869c41904ff",
 		"name": "QuickMoveServiceAPI",
 		"description": "QuickMove offers seamless registration, booking, and ride management for both passengers and drivers. Users can quickly book rides, track their journey history, and cancel or complete rides as needed, all within a user-friendly platform. Built with robust API endpoints and secure authentication, QuickMove ensures efficient matching of drivers and passengers for a smooth, hassle-free ride experience",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -11,6 +11,38 @@
 			"item": [
 				{
 					"name": "RegisterAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Define required fields for the request body",
+									"let requiredFields = ['email', 'name', 'password', 'phone', 'role'];",
+									"",
+									"// Test to ensure that the request body contains all required fields",
+									"pm.test(\"Request body contains all required fields\", function () {",
+									"    let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"    if (requestBody) {",
+									"        let parsedBody = JSON.parse(requestBody);",
+									"        requiredFields.forEach(field => {",
+									"            pm.expect(parsedBody).to.include.keys(field);",
+									"        });",
+									"    } else {",
+									"        pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"    }",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -44,9 +76,36 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"if(pm.response.code == 200){",
-									"    pm.environment.set(\"accessToken\",pm.response.text());",
-									"}"
+									"",
+									"var jsonResponse = pm.response.json();",
+									"",
+									"// Ensure the response contains the access_token",
+									"pm.test(\"Response should contain access_token\", function () {",
+									"    pm.expect(jsonResponse.data.access_token).to.not.be.null;",
+									"});",
+									"",
+									"// Save the access_token as an environment variable",
+									"pm.environment.set(\"accessToken\", jsonResponse.data.access_token);",
+									"",
+									"// Define required fields for the request body",
+									"let requiredFields = ['name', 'password'];",
+									"",
+									"// Check if all required fields are present in the request body",
+									"requiredFields.forEach(field => {",
+									"    pm.test(`${field} should be present in the request body`, function () {",
+									"        // Access the request body (assuming it's JSON)",
+									"        let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"        ",
+									"        // If the request body exists, parse it as JSON and check for fields",
+									"        if (requestBody) {",
+									"            let parsedBody = JSON.parse(requestBody);",
+									"            pm.expect(parsedBody).to.have.property(field);",
+									"        } else {",
+									"            pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"        }",
+									"    });",
+									"});",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -83,6 +142,73 @@
 				},
 				{
 					"name": "Create Ride",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test to ensure that the response status is 200 OK",
+									"pm.test(\"Response status is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// List of required fields (including nested fields like driver.id, passenger.email, etc.)",
+									"let requiredFields = [",
+									"    'status',",
+									"    'driver.id',",
+									"    'driver.email',",
+									"    'passenger.id',",
+									"    'passenger.email',",
+									"    'startLocation',",
+									"    'endLocation',",
+									"    'startTime',",
+									"    'endTime',",
+									"    'cancellationReason',",
+									"    'price'",
+									"];",
+									"",
+									"// Function to check if a nested field exists",
+									"function checkNestedField(obj, path) {",
+									"    const fields = path.split('.');",
+									"    let fieldValue = obj;",
+									"",
+									"    // Traverse the object using the path",
+									"    for (let i = 0; i < fields.length; i++) {",
+									"        if (fieldValue && fieldValue.hasOwnProperty(fields[i])) {",
+									"            fieldValue = fieldValue[fields[i]];",
+									"        } else {",
+									"            return false;",
+									"        }",
+									"    }",
+									"    return true;",
+									"}",
+									"",
+									"// Test to ensure that all required fields are present in the request body",
+									"pm.test(\"Request body contains all required fields\", function () {",
+									"    // Access the request body (assuming it's JSON)",
+									"    let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"    ",
+									"    // If the request body exists, parse it as JSON",
+									"    if (requestBody) {",
+									"        let parsedBody = JSON.parse(requestBody);",
+									"        ",
+									"        // Check each required field",
+									"        requiredFields.forEach(field => {",
+									"            let fieldExists = checkNestedField(parsedBody, field);",
+									"            ",
+									"            // Assert that the field exists",
+									"            pm.expect(fieldExists, `${field} should be present in the request body`).to.be.true;",
+									"        });",
+									"    } else {",
+									"        pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -150,6 +276,21 @@
 				},
 				{
 					"name": "Get Ride By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK when the ride exists\", function () {",
+									"    pm.response.to.have.status(200);  // Check if status code is 200 OK",
+									"    pm.response.to.have.jsonBody(\"id\");  // Verify that the response body contains the 'id' field",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -170,6 +311,73 @@
 				},
 				{
 					"name": "Update Ride",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test to ensure that the response status is 200 OK",
+									"pm.test(\"Response status is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// List of required fields (including nested fields like driver.id, passenger.email, etc.)",
+									"let requiredFields = [",
+									"    'status',",
+									"    'driver.id',",
+									"    'driver.email',",
+									"    'passenger.id',",
+									"    'passenger.email',",
+									"    'startLocation',",
+									"    'endLocation',",
+									"    'startTime',",
+									"    'endTime',",
+									"    'cancellationReason',",
+									"    'price'",
+									"];",
+									"",
+									"// Function to check if a nested field exists",
+									"function checkNestedField(obj, path) {",
+									"    const fields = path.split('.');",
+									"    let fieldValue = obj;",
+									"",
+									"    // Traverse the object using the path",
+									"    for (let i = 0; i < fields.length; i++) {",
+									"        if (fieldValue && fieldValue.hasOwnProperty(fields[i])) {",
+									"            fieldValue = fieldValue[fields[i]];",
+									"        } else {",
+									"            return false;",
+									"        }",
+									"    }",
+									"    return true;",
+									"}",
+									"",
+									"// Test to ensure that all required fields are present in the request body",
+									"pm.test(\"Request body contains all required fields\", function () {",
+									"    // Access the request body (assuming it's JSON)",
+									"    let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"    ",
+									"    // If the request body exists, parse it as JSON",
+									"    if (requestBody) {",
+									"        let parsedBody = JSON.parse(requestBody);",
+									"        ",
+									"        // Check each required field",
+									"        requiredFields.forEach(field => {",
+									"            let fieldExists = checkNestedField(parsedBody, field);",
+									"            ",
+									"            // Assert that the field exists",
+									"            pm.expect(fieldExists, `${field} should be present in the request body`).to.be.true;",
+									"        });",
+									"    } else {",
+									"        pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -199,6 +407,20 @@
 				},
 				{
 					"name": "Delete Ride",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK when the ride exists\", function () {",
+									"    pm.response.to.have.status(200); ",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -401,12 +623,39 @@
 			"item": [
 				{
 					"name": "RegisterPassenger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"let requiredFields = ['email', 'name', 'password', 'phone', 'role'];",
+									"pm.test(\"Request body contains all required fields\", function () {",
+									"    let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"    if (requestBody) {",
+									"        let parsedBody = JSON.parse(requestBody);",
+									"        requiredFields.forEach(field => {",
+									"            pm.expect(parsedBody).to.include.keys(field);",
+									"        });",
+									"    } else {",
+									"        pm.expect(requestBody).to.not.be.null;",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"passenger@email.com\",\n    \"name\": \"passenger1\",\n    \"password\": \"passenger@1234\",\n    \"phone\": \"1234\",\n    \"role\": \"passenger\",\n    \"organization\": {\n        \"id\": 1\n    }\n}",
+							"raw": "{\n    \"email\": \"vk@email.com\",\n    \"name\": \"vk\",\n    \"password\": \"vk@1234\",\n    \"phone\": \"123489\",\n    \"role\": \"passenger\",\n    \"organization\": {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -434,9 +683,35 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"if(pm.response.code == 200){",
-									"    pm.environment.set(\"accessToken\",pm.response.text());",
-									"}"
+									"var jsonResponse = pm.response.json();",
+									"",
+									"// Ensure the response contains the access_token",
+									"pm.test(\"Response should contain access_token\", function () {",
+									"    pm.expect(jsonResponse.data.access_token).to.not.be.null;",
+									"});",
+									"",
+									"// Save the access_token as an environment variable",
+									"pm.environment.set(\"accessToken\", jsonResponse.data.access_token);",
+									"",
+									"// Define required fields for the request body",
+									"let requiredFields = ['name', 'password'];",
+									"",
+									"// Check if all required fields are present in the request body",
+									"requiredFields.forEach(field => {",
+									"    pm.test(`${field} should be present in the request body`, function () {",
+									"        // Access the request body (assuming it's JSON)",
+									"        let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"        ",
+									"        // If the request body exists, parse it as JSON and check for fields",
+									"        if (requestBody) {",
+									"            let parsedBody = JSON.parse(requestBody);",
+									"            pm.expect(parsedBody).to.have.property(field);",
+									"        } else {",
+									"            pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"        }",
+									"    });",
+									"});",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -450,7 +725,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"passenger1\",\n    \"password\": \"passenger@1234\"\n}",
+							"raw": "{\n    \"name\": \"vk\",\n    \"password\": \"vk@1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -473,6 +748,32 @@
 				},
 				{
 					"name": "SearchRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test to check if the response status is 200 OK",
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test to check that response contains required fields",
+									"pm.test(\"Response contains required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ride).to.not.be.null;",
+									"    pm.expect(jsonData.ride).to.have.property('id');",
+									"    pm.expect(jsonData.ride).to.have.property('startLocationLatitude');",
+									"    pm.expect(jsonData.ride).to.have.property('startLocationLongitude');",
+									"    pm.expect(jsonData.ride).to.have.property('endLocationLatitude');",
+									"    pm.expect(jsonData.ride).to.have.property('endLocationLongitude');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -521,6 +822,29 @@
 				},
 				{
 					"name": "BookRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test to check if the response status is 200 OK",
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test to check that response contains required fields",
+									"pm.test(\"Response contains required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ride).to.not.be.null;",
+									"    pm.expect(jsonData.ride).to.have.property('id');",
+									"    pm.expect(jsonData.ride).to.have.property('rideType');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -544,7 +868,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/book?rideId=3&vehicleTypeId=1&cost=9063.0$",
+							"raw": "{{apiUrl}}/api/rides/book?rideId=31&vehicleTypeId=1&cost=9063.0$",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -556,7 +880,7 @@
 							"query": [
 								{
 									"key": "rideId",
-									"value": "3"
+									"value": "31"
 								},
 								{
 									"key": "vehicleTypeId",
@@ -573,6 +897,19 @@
 				},
 				{
 					"name": "CancelRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -587,7 +924,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/cancel?rideId=1&reason=Wrong Address selected",
+							"raw": "{{apiUrl}}/api/rides/cancel?rideId=28&reason=Wrong Address selected",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -599,7 +936,7 @@
 							"query": [
 								{
 									"key": "rideId",
-									"value": "1"
+									"value": "28"
 								},
 								{
 									"key": "reason",
@@ -612,6 +949,19 @@
 				},
 				{
 					"name": "GetRideHistory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -626,7 +976,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/history?userId=1",
+							"raw": "{{apiUrl}}/api/rides/history?userId=18",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -638,7 +988,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "18"
 								}
 							]
 						}
@@ -652,12 +1002,76 @@
 			"item": [
 				{
 					"name": "DriverCompleteRegistration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"let requiredFields = [",
+									"    'email',",
+									"    'name',",
+									"    'password',",
+									"    'phone',",
+									"    'role',",
+									"    'licenseNumber',",
+									"    'vehicleNumber',",
+									"    'vehicleColor',",
+									"    'vehicleModel',",
+									"    'organization.id',",
+									"    'vehicleType.id'",
+									"];",
+									"",
+									"// Function to check if a nested field exists",
+									"function checkNestedField(obj, path) {",
+									"    const fields = path.split('.');",
+									"    let fieldValue = obj;",
+									"",
+									"    // Traverse the object using the path",
+									"    for (let i = 0; i < fields.length; i++) {",
+									"        if (fieldValue && fieldValue.hasOwnProperty(fields[i])) {",
+									"            fieldValue = fieldValue[fields[i]];",
+									"        } else {",
+									"            return false;",
+									"        }",
+									"    }",
+									"    return true;",
+									"}",
+									"",
+									"// Test to ensure that all required fields are present in the request body",
+									"pm.test(\"Request body contains all required fields\", function () {",
+									"    // Access the request body (assuming it's JSON)",
+									"    let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"    ",
+									"    // If the request body exists, parse it as JSON",
+									"    if (requestBody) {",
+									"        let parsedBody = JSON.parse(requestBody);",
+									"        ",
+									"        // Check each required field",
+									"        requiredFields.forEach(field => {",
+									"            let fieldExists = checkNestedField(parsedBody, field);",
+									"            ",
+									"            // Assert that the field exists",
+									"            pm.expect(fieldExists, `${field} should be present in the request body`).to.be.true;",
+									"        });",
+									"    } else {",
+									"        pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"driver@email.com\",\n    \"name\": \"driver1\",\n    \"password\": \"driver@1234\",\n    \"phone\": \"4321\",\n    \"role\": \"driver\",\n    \"organization\": {\n        \"id\": 1\n    },\n    \"licenseNumber\": \"DL12345678901234\",\n    \"vehicleNumber\": \"DL12 AB 1234\",\n    \"vehicleColor\": \"White\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleType\": {\n        \"id\": 1\n    }\n}",
+							"raw": "{\n    \"email\": \"drivers@email.com\",\n    \"name\": \"drivers\",\n    \"password\": \"drivers@1234\",\n    \"phone\": \"43211\",\n    \"role\": \"driver\",\n    \"organization\": {\n        \"id\": 1\n    },\n    \"licenseNumber\": \"DL12345678901234\",\n    \"vehicleNumber\": \"DL12 AB 1234\",\n    \"vehicleColor\": \"White\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleType\": {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -713,9 +1127,35 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"if(pm.response.code == 200){",
-									"    pm.environment.set(\"accessToken\",pm.response.text());",
-									"}"
+									"var jsonResponse = pm.response.json();",
+									"",
+									"// Ensure the response contains the access_token",
+									"pm.test(\"Response should contain access_token\", function () {",
+									"    pm.expect(jsonResponse.data.access_token).to.not.be.null;",
+									"});",
+									"",
+									"// Save the access_token as an environment variable",
+									"pm.environment.set(\"accessToken\", jsonResponse.data.access_token);",
+									"",
+									"// Define required fields for the request body",
+									"let requiredFields = ['name', 'password'];",
+									"",
+									"// Check if all required fields are present in the request body",
+									"requiredFields.forEach(field => {",
+									"    pm.test(`${field} should be present in the request body`, function () {",
+									"        // Access the request body (assuming it's JSON)",
+									"        let requestBody = pm.request.body ? pm.request.body.raw : null;",
+									"        ",
+									"        // If the request body exists, parse it as JSON and check for fields",
+									"        if (requestBody) {",
+									"            let parsedBody = JSON.parse(requestBody);",
+									"            pm.expect(parsedBody).to.have.property(field);",
+									"        } else {",
+									"            pm.expect(requestBody).to.not.be.null; // If no body is sent, fail the test",
+									"        }",
+									"    });",
+									"});",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -729,7 +1169,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"driver1\",\n    \"password\": \"driver@1234\"\n}",
+							"raw": "{\n    \"name\": \"drivers\",\n    \"password\": \"drivers@1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -752,6 +1192,19 @@
 				},
 				{
 					"name": "DriverProfile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -767,7 +1220,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"licenseNumber\": \"DL-1420110012345\",\n    \"vehicleType\": \"CAR\",\n    \"vehicleNumber\": \"KA019999\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzire\",\n    \"vehicleColor\": \"White\",\n    \"latitude\": -11.41020,\n    \"longitude\": 87.57929\n}",
+							"raw": "{\n    \"licenseNumber\": \"DL-1420110012345\",\n    \"vehicleType\": \"CAR\",\n    \"vehicleNumber\": \"KA019999\",\n    \"vehicleModel\": \"Maruti Suzuki Swift Dzires\",\n    \"vehicleColor\": \"White\",\n    \"latitude\": -11.41020,\n    \"longitude\": 87.57929\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -775,7 +1228,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/driver/profile/1",
+							"raw": "{{apiUrl}}/api/driver/profile/21",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -783,7 +1236,7 @@
 								"api",
 								"driver",
 								"profile",
-								"1"
+								"21"
 							]
 						}
 					},
@@ -820,6 +1273,30 @@
 				},
 				{
 					"name": "AcceptRideRequest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 OK when the ride is accepted\", function () {",
+									"    pm.response.to.have.status(201); ",
+									"});",
+									"pm.test(\"Ride status should be 'ASSIGNED'\", function () {",
+									"    // Parse the response JSON",
+									"    const responseBody = pm.response.json();",
+									"",
+									"    // Check if the 'ride' object exists and has a 'status' property",
+									"    pm.expect(responseBody.ride).to.have.property('status');",
+									"",
+									"    // Check if the 'status' property of the 'ride' is equal to 'ASSIGNED'",
+									"    pm.expect(responseBody.ride.status).to.eql(\"ASSIGNED\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -834,7 +1311,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/accept?rideId=3",
+							"raw": "{{apiUrl}}/api/rides/accept?rideId=31",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -846,7 +1323,7 @@
 							"query": [
 								{
 									"key": "rideId",
-									"value": "3"
+									"value": "31"
 								}
 							]
 						}
@@ -855,6 +1332,24 @@
 				},
 				{
 					"name": "StartRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ride status is ONGOING\", function () {",
+									"    // Parse the response JSON",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    // Ensure that the status is \"ASSIGNED\"",
+									"    pm.expect(jsonData.ride.status).to.eql(\"ONGOING\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -869,7 +1364,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/start?rideId=3",
+							"raw": "{{apiUrl}}/api/rides/start?rideId=30",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -881,7 +1376,7 @@
 							"query": [
 								{
 									"key": "rideId",
-									"value": "3"
+									"value": "30"
 								}
 							]
 						}
@@ -890,6 +1385,24 @@
 				},
 				{
 					"name": "CompleteRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ride status is COMPLETED\", function () {",
+									"    // Parse the response JSON",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    // Ensure that the status is \"ASSIGNED\"",
+									"    pm.expect(jsonData.ride.status).to.eql(\"COMPLETED\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -904,7 +1417,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/complete?rideId=3&latitude=10.11&longitude=20.3",
+							"raw": "{{apiUrl}}/api/rides/complete?rideId=30&latitude=10.11&longitude=20.3",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -916,7 +1429,7 @@
 							"query": [
 								{
 									"key": "rideId",
-									"value": "3"
+									"value": "30"
 								},
 								{
 									"key": "latitude",
@@ -933,6 +1446,19 @@
 				},
 				{
 					"name": "CancelRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -972,6 +1498,19 @@
 				},
 				{
 					"name": "GetRideHistory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -986,7 +1525,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/api/rides/history?userId=16",
+							"raw": "{{apiUrl}}/api/rides/history?userId=21",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -998,7 +1537,7 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "16"
+									"value": "21"
 								}
 							]
 						}
