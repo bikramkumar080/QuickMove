@@ -1,6 +1,7 @@
 # Quick-Move
 Project Outline: On-Demand Ride Platform
 
+Overview: QuickMove APIs help easy integration with customer system facilitating quick market reach without worrying about basic functionality.
 # Stakeholders | Goals
 **1. Passenger**
 
@@ -10,7 +11,9 @@ Project Outline: On-Demand Ride Platform
 
 - Ensure passengers can end their session securely.
 
-- Facilitate ride requests by allowing passengers to book rides in real-time.
+- Facilitate ride requests by allowing passengers to search for rides and get costings in real-time.
+
+- Facilitate ride booking by allowing passengers to book their desired ride.
 
 - Provide passengers with access to their past ride details.
 
@@ -20,9 +23,11 @@ Project Outline: On-Demand Ride Platform
 
 - Enable drivers to create an account, setting up their profile and vehicle information.
 
+- Allow registered drivers to complete their profile by adding vehicle related details.
+
 - Allow registered drivers to securely access their accounts.
 
-- Provide drivers with a list of available ride requests in their area.
+- Provide drivers with a list of available ride requests.
 
 - Allow drivers to accept a specific ride request.
 
@@ -44,6 +49,8 @@ Project Outline: On-Demand Ride Platform
 
 - Allow admins to access details about a specific user, either a passenger or driver.
 
+- Allow admins to register cost calculating url of client organisation.
+
 
 # Endpoints to fulfill above goals:
 
@@ -55,17 +62,21 @@ Login API: _/api/users/login_
 
 Logout API: _/api/users/logout_
 
+Search Ride API: _/api/rides/search_
+
 Request Ride API: _/api/rides/book_
 
-Ride History API: _/api/rides/history_
-
 Cancel Ride API: _/api/rides/cancel_
+
+Ride History API: _/api/rides/history_
 
 **2. Driver Goals**
 
 Register API: _Merged with other stakeholder_
 
 Login API: _Merged with other stakeholder_
+
+Update Profile API: _/api/driver/profile_
 
 List Ride Requests API: _/api/rides/check_
 
@@ -77,17 +88,19 @@ Complete Ride API: _/api/rides/complete_
 
 Cancel Ride API: _Merged with other stakeholder_
 
-Ride History API: _/api/rides/history_
+Ride History API: _Merged with other stakeholder_
 
 **3. Admin Goals**
 
-CRUD operations on ride table: _/rides_
+Register API: _Merged with other stakeholder_
 
-CRUD operations on user table: _/users_
+Login API: _Merged with other stakeholder_
 
-List out cancel rides: _/api/admin/rides/cancel_
+CRUD operations on ride table: _/api/admin/ride_
 
-Apply penalties: _/api/admin/penalties_
+CRUD operations on user table: _/api/admin/users_
+
+Register cost-calculation URL: _/api/admin/cost-calc-endpoint_
 
 
 # Core Features
