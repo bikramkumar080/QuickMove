@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("api/rides")
 public class RideController {
@@ -30,14 +31,14 @@ public class RideController {
     private VehicleTypeService vehicleTypeService;
 
     @GetMapping("/history")
-    public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId) {
+    public ResponseEntity<List<RideDTO>> getRideHistory(@RequestParam Long userId, @RequestParam int page, @RequestParam(required = false, defaultValue = "10") int count) {
         try {
             String role = userService.getUserRole(userId);
             List<RideDTO> history = null;
             if ("PASSENGER".equalsIgnoreCase(role)) {
-                history = rideService.getRideHistoryByPassenger(userId);
+                history = rideService.getRideHistoryByPassenger(userId, page, count);
             } else if ("DRIVER".equalsIgnoreCase(role)) {
-                history = rideService.getRideHistoryByDriver(userId);
+                history = rideService.getRideHistoryByDriver(userId, page, count);
             }else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }

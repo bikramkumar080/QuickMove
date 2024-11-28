@@ -6,6 +6,7 @@ import com.quickMove.model.VehicleType;
 import com.quickMove.repository.RideRepository;
 import com.quickMove.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,20 +38,22 @@ public class RideService {
     public Ride fetchRideById(Long id) {
         return rideRepository.findById(id).orElse(null);
     }
-    public List<RideDTO> getRideHistoryByPassenger(Long passengerId) {
+    public List<RideDTO> getRideHistoryByPassenger(Long passengerId, int page, int count) {
         List<Ride> rides = rideRepository.findByPassengerIdAndStatusIn(
                 passengerId,
-                Arrays.asList("COMPLETED", "CANCELLED")
+                Arrays.asList("COMPLETED", "CANCELLED"),
+                PageRequest.of(page, count)
         );
         return rides.stream()
                     .map(this::convertToRideDTO)
                     .collect(Collectors.toList());
     }
 
-    public List<RideDTO> getRideHistoryByDriver(Long driverId) {
+    public List<RideDTO> getRideHistoryByDriver(Long driverId, int page, int count) {
         List<Ride> rides = rideRepository.findByDriverIdAndStatusIn(
                 driverId,
-                Arrays.asList("COMPLETED", "CANCELLED")
+                Arrays.asList("COMPLETED", "CANCELLED"),
+                PageRequest.of(page, count)
         );
 
         // Convert to DTO
